@@ -10,6 +10,8 @@
 <header>
   <h1>agent-session-recap <span class="sub">只读会话浏览器</span></h1>
   <div class="src" id="sessionsDir"></div>
+  <span class="spacer"></span>
+  <button id="openProviders">AI 供应商</button>
 </header>
 
 <!-- 飞书式筛选器 -->
@@ -51,6 +53,16 @@
   <button data-quick="lastMonth">导出上个月</button>
 </section>
 
+<!-- AI 工具条 -->
+<section class="ai-bar">
+  <span class="ai-bar-label">AI：</span>
+  <button id="aiSummarizeSelected">总结所选会话</button>
+  <button id="aiBatch">摘要总结筛选结果</button>
+  <button id="aiAsk">对筛选结果提问</button>
+  <span class="spacer"></span>
+  <span id="aiCurrent" class="muted"></span>
+</section>
+
 <section class="bar">
   <div id="stats" class="stats">—</div>
   <div class="bar-right">
@@ -74,6 +86,7 @@
         <th data-key="mtime">文件更新时间</th>
         <th data-key="size" class="num">大小</th>
         <th data-key="archived">归档</th>
+        <th class="ai-col">AI</th>
       </tr>
     </thead>
     <tbody id="rows"></tbody>
@@ -117,6 +130,79 @@
   </div>
 </div>
 
+<!-- AI 面板 -->
+<div id="aiModal" class="modal-backdrop hidden">
+  <div class="modal ai-modal">
+    <div class="panel-head">
+      <h2 id="aiTitle">AI</h2>
+      <span id="aiMeta" class="muted"></span>
+      <span class="spacer"></span>
+      <label class="ai-pick">供应商
+        <select id="aiProvider"></select>
+      </label>
+      <label class="ai-pick">模型
+        <select id="aiModel"></select>
+      </label>
+      <button id="aiClose" class="icon-btn" title="关闭">✕</button>
+    </div>
+    <div id="aiProgress" class="ai-progress"></div>
+    <div id="aiOutput" class="ai-output"></div>
+    <div id="aiAskRow" class="ai-ask hidden">
+      <textarea id="aiQuestion" rows="2" placeholder="就筛选出的会话提问，例如：这些会话里都改动了哪些文件？"></textarea>
+      <button id="aiSend" class="primary">发送</button>
+    </div>
+    <div class="modal-foot">
+      <span id="aiStatus" class="muted"></span>
+      <span class="spacer"></span>
+      <button id="aiStop" class="hidden">停止</button>
+      <button id="aiCloseBtn">关闭</button>
+    </div>
+  </div>
+</div>
+
+<!-- 供应商管理 -->
+<div id="provModal" class="modal-backdrop hidden">
+  <div class="modal prov-modal">
+    <div class="panel-head">
+      <h2>AI 供应商</h2>
+      <input id="provSearch" class="search" placeholder="查找供应商">
+      <span class="spacer"></span>
+      <button id="provAdd" class="primary">＋ 添加供应商</button>
+      <button id="provClose" class="icon-btn">✕</button>
+    </div>
+    <div id="provList" class="prov-list"></div>
+    <div class="modal-foot">
+      <span id="provStatus" class="muted"></span>
+      <span class="spacer"></span>
+      <button id="provCloseBtn">关闭</button>
+    </div>
+  </div>
+</div>
+
+<!-- 添加供应商 -->
+<div id="addProvModal" class="modal-backdrop hidden">
+  <div class="modal add-prov">
+    <div class="panel-head">
+      <h2 id="addProvTitle">添加供应商</h2>
+      <span class="spacer"></span>
+      <button id="addProvClose" class="icon-btn">✕</button>
+    </div>
+    <div id="addProvPicker" class="add-picker">
+      <input id="presetSearch" class="search" placeholder="查找供应商… 或点选一个卡片">
+      <div id="presetGroups" class="preset-groups"></div>
+    </div>
+    <div id="addProvForm" class="add-form hidden"></div>
+    <div class="modal-foot">
+      <span id="addProvStatus" class="muted"></span>
+      <span class="spacer"></span>
+      <button id="addProvBack" class="hidden">← 返回</button>
+      <button id="addProvCancel">取消</button>
+      <button id="addProvSave" class="primary">添加</button>
+    </div>
+  </div>
+</div>
+
 <script src="/app.js"></script>
+<script src="/ai.js"></script>
 </body>
 </html>

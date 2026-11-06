@@ -376,7 +376,7 @@ function applyConditions(list) {
 }
 
 // ---- 列宽 ----
-const DEFAULT_COLS = [40, 300, 240, 130, 170, 170, 170, 170, 90, 70];
+const DEFAULT_COLS = [40, 300, 240, 130, 170, 170, 170, 170, 90, 70, 64];
 const STORAGE_KEY = "agent-session-recap-col-widths";
 let colWidths = DEFAULT_COLS.slice();
 
@@ -519,8 +519,10 @@ function renderRows() {
       <td>${fmtTime(s.lastActivity)}</td>
       <td>${fmtTime(s.mtime)}</td>
       <td class="num">${fmtSize(s.size)}</td>
-      <td class="${s.archived ? "arch-yes" : ""}">${s.archived ? "是" : ""}</td>`;
+      <td class="${s.archived ? "arch-yes" : ""}">${s.archived ? "是" : ""}</td>
+      <td class="ai-col"><button class="row-ai" title="用 AI 总结这条会话">总结</button></td>`;
     tbody.appendChild(tr);
+    tr.querySelector(".row-ai").addEventListener("click", () => aiSummarizeSingle(s));
   }
   $("headPick").checked = false;
 }
@@ -705,4 +707,7 @@ document.querySelectorAll(".quick button[data-quick]").forEach((b) => {
 
 initColumns();
 renderConditions();
-loadConfig().then(apply);
+loadConfig().then(() => {
+  apply();
+  initAi();
+});

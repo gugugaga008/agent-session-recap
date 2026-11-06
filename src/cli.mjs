@@ -41,6 +41,10 @@ function help() {
   agent-session-recap web    [--port 8651] [--host 127.0.0.1] [--open]
   agent-session-recap export [筛选 | --result <文件>] [--ids a,b] --format jsonl|md|html --out <目录>
 
+AI（在 web 界面里）：
+  总结单条会话 / 对筛选结果做摘要总结 / 针对筛选结果 AI 提问。
+  先在网页右上角「AI 供应商」里添加供应商（配置与 magpie 一致）。
+
 筛选：
   --field <名称>        created(创建) | lastActivity(最后活动) | lastMessage(最后消息) | mtime(文件更新) | activity(区间内有活动)   （默认：${DEFAULT_FIELD}）
   --from <时间>         起始时间（含），本地时区。例：2026-11-05 或 "2026-11-05 08:00"

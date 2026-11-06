@@ -1,5 +1,6 @@
 // Lightweight local web UI: a tiny http server (no framework) that serves a
-// static single page plus a few JSON endpoints. Binds to 127.0.0.1 by default.
+// static single page plus JSON endpoints — session listing/filtering, export,
+// provider management, and the AI features (summarize / batch / ask).
 import http from "node:http";
 import fs from "node:fs/promises";
 import path from "node:path";
@@ -10,6 +11,21 @@ import { collectSessionFiles } from "./scanner.mjs";
 import { scanMeta } from "./parser.mjs";
 import { filterSessions, resolveRange, DEFAULT_FIELD, TIME_FIELDS } from "./filter.mjs";
 import { exportMany, EXPORT_FORMATS } from "./export.mjs";
+import {
+  API_KINDS,
+  PRESET_GROUPS,
+  addProvider,
+  detectProtocol,
+  fetchModels,
+  getProvider,
+  listProviders,
+  loadPrefs,
+  loadPresets,
+  removeProvider,
+  savePrefs,
+  updateProvider,
+} from "./providers.mjs";
+import { askSessions, summarizeBatch, summarizeSession } from "./ai.mjs";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const PUBLIC_DIR = path.join(__dirname, "..", "public");
@@ -20,6 +36,7 @@ const MIME = {
   ".css": "text/css; charset=utf-8",
   ".json": "application/json; charset=utf-8",
   ".svg": "image/svg+xml",
+  ".png": "image/png",
 };
 
 /** Metadata cache keyed by absolute path; invalidated by size+mtime change. */
@@ -83,11 +100,21 @@ function readBody(req) {
     let data = "";
     req.on("data", (c) => {
       data += c;
-      if (data.length > 5_000_000) reject(new Error("请求体过大"));
+      if (data.length > 20_000_000) reject(new Error("请求体过大"));
     });
     req.on("end", () => resolve(data));
     req.on("error", reject);
   });
+}
+
+async function readJsonBody(req) {
+  const raw = await readBody(req);
+  if (!raw) return {};
+  try {
+    return JSON.parse(raw);
+  } catch {
+    throw new Error("请求体不是合法 JSON");
+  }
 }
 
 /** 在本机弹出原生文件夹选择对话框，返回所选目录的绝对路径（取消返回 null）。 */
@@ -124,25 +151,85 @@ function pickDirectory(initial) {
   });
 }
 
+/** Server-sent events: one JSON object per `data:` line. */
+function openSse(res) {
+  res.writeHead(200, {
+    "Content-Type": "text/event-stream; charset=utf-8",
+    "Cache-Control": "no-cache, no-transform",
+    Connection: "keep-alive",
+    "X-Accel-Buffering": "no",
+  });
+  if (typeof res.flushHeaders === "function") res.flushHeaders();
+  let open = true;
+  res.on("close", () => {
+    open = false;
+  });
+  return {
+    get open() {
+      return open;
+    },
+    send(obj) {
+      if (!open) return;
+      res.write(`data: ${JSON.stringify(obj)}\n\n`);
+    },
+    end() {
+      if (!open) return;
+      open = false;
+      res.end();
+    },
+  };
+}
+
 export function createServer(opts = {}) {
   const sessionsDir = getSessionsDir(opts.sessionDir);
   const cache = new ScanCache();
   const lastScan = new Map(); // id -> meta (latest scan)
 
+  async function ensureSessions(ids) {
+    let missing = ids.filter((id) => !lastScan.has(id));
+    if (missing.length) {
+      const all = await cache.scanAll(sessionsDir);
+      for (const m of all) lastScan.set(m.id, m);
+      missing = ids.filter((id) => !lastScan.has(id));
+    }
+    return { list: ids.map((id) => lastScan.get(id)).filter(Boolean), missing };
+  }
+
+  async function resolveProvider(body) {
+    if (body.providerId) {
+      const p = getProvider(body.providerId);
+      if (!p) throw new Error(`未找到供应商「${body.providerId}」`);
+      return p;
+    }
+    if (body.provider && typeof body.provider === "object") return body.provider;
+    throw new Error("请选择供应商");
+  }
+
+  function defaultModelFor(provider, body) {
+    const model = body.model || loadPrefs().defaultModel;
+    if (model) return model;
+    const first = (provider.models && provider.models[0]) || (provider.pickedFrom && provider.pickedFrom[0]);
+    if (first) return first;
+    throw new Error("请选择模型");
+  }
+
   const server = http.createServer(async (req, res) => {
     const url = new URL(req.url, "http://localhost");
+    const p = url.pathname;
     try {
-      if (req.method === "GET" && url.pathname === "/api/config") {
+      if (req.method === "GET" && p === "/api/config") {
         return sendJson(res, 200, {
           sessionsDir,
           defaultOutDir: getDefaultExportDir(),
           defaultField: DEFAULT_FIELD,
           fields: TIME_FIELDS,
           formats: EXPORT_FORMATS,
+          apiKinds: API_KINDS,
+          presetGroups: PRESET_GROUPS,
         });
       }
 
-      if (req.method === "GET" && url.pathname === "/api/sessions") {
+      if (req.method === "GET" && p === "/api/sessions") {
         const q = url.searchParams;
         const { from, to } = resolveRange(q.get("from"), q.get("to"));
         const all = await cache.scanAll(sessionsDir);
@@ -155,22 +242,17 @@ export function createServer(opts = {}) {
           cwd: q.get("cwd") || null,
           grep: q.get("grep") || null,
         });
-        return sendJson(res, 200, {
-          sessionsDir,
-          scanned: all.length,
-          count: list.length,
-          sessions: list,
-        });
+        return sendJson(res, 200, { sessionsDir, scanned: all.length, count: list.length, sessions: list });
       }
 
-      if (req.method === "POST" && url.pathname === "/api/pick-dir") {
-        const body = JSON.parse((await readBody(req)) || "{}");
+      if (req.method === "POST" && p === "/api/pick-dir") {
+        const body = await readJsonBody(req);
         const picked = await pickDirectory(body.initial);
         return sendJson(res, 200, { path: picked });
       }
 
-      if (req.method === "POST" && url.pathname === "/api/export") {
-        const body = JSON.parse((await readBody(req)) || "{}");
+      if (req.method === "POST" && p === "/api/export") {
+        const body = await readJsonBody(req);
         const ids = Array.isArray(body.ids) ? body.ids : [];
         const format = body.format || "jsonl";
         const outDir = body.outDir;
@@ -182,11 +264,165 @@ export function createServer(opts = {}) {
         return sendJson(res, 200, result);
       }
 
-      if (req.method === "GET") return serveStatic(res, url.pathname);
+      // ---------------------------------------------------------- providers
+
+      if (req.method === "GET" && p === "/api/providers") {
+        return sendJson(res, 200, {
+          providers: listProviders({ reveal: url.searchParams.get("reveal") === "1" }),
+          presets: loadPresets(),
+          groups: PRESET_GROUPS,
+          apiKinds: API_KINDS,
+          prefs: loadPrefs(),
+        });
+      }
+
+      if (req.method === "POST" && p === "/api/providers") {
+        const body = await readJsonBody(req);
+        const created = await addProvider(body);
+        if (body.setDefault) await savePrefs({ defaultProvider: created.id });
+        return sendJson(res, 200, { provider: created });
+      }
+
+      if (req.method === "POST" && p === "/api/providers/models") {
+        const body = await readJsonBody(req);
+        const provider = body.id ? getProvider(body.id) : { ...body, id: "__adhoc__" };
+        if (!provider) return sendJson(res, 404, { error: "未找到供应商" });
+        const result = await fetchModels(provider);
+        return sendJson(res, 200, result);
+      }
+
+      if (req.method === "POST" && p === "/api/providers/test") {
+        const body = await readJsonBody(req);
+        const result = await detectProtocol(body);
+        return sendJson(res, 200, result);
+      }
+
+      if (req.method === "POST" && p === "/api/prefs") {
+        const body = await readJsonBody(req);
+        return sendJson(res, 200, { prefs: await savePrefs(body) });
+      }
+
+      const provMatch = /^\/api\/providers\/([^/]+)$/.exec(p);
+      if (provMatch) {
+        const id = decodeURIComponent(provMatch[1]);
+        if (req.method === "PATCH" || req.method === "PUT") {
+          const body = await readJsonBody(req);
+          return sendJson(res, 200, { provider: await updateProvider(id, body) });
+        }
+        if (req.method === "DELETE") {
+          return sendJson(res, 200, await removeProvider(id));
+        }
+      }
+
+      // ---------------------------------------------------------- AI (SSE)
+
+      if (req.method === "POST" && p === "/api/ai/summarize") {
+        const body = await readJsonBody(req);
+        const provider = await resolveProvider(body);
+        const model = defaultModelFor(provider, body);
+        const { list, missing } = await ensureSessions(body.ids || (body.id ? [body.id] : []));
+        const sse = openSse(res);
+        if (missing.length) sse.send({ type: "warning", message: `未找到会话：${missing.join(", ")}` });
+        if (!list.length) {
+          sse.send({ type: "error", message: "未选择有效会话" });
+          return sse.end();
+        }
+        sse.send({ type: "start", provider: provider.id, model, count: list.length });
+        for (const meta of list) {
+          sse.send({ type: "session-start", id: meta.id, name: meta.displayName || meta.id });
+          try {
+            let text = "";
+            for await (const d of summarizeSession(provider, model, meta, { lang: body.lang, maxChars: body.maxChars })) {
+              if (!sse.open) return;
+              text += d;
+              sse.send({ type: "delta", id: meta.id, text: d });
+            }
+            sse.send({ type: "session-end", id: meta.id, text });
+          } catch (e) {
+            sse.send({ type: "error", id: meta.id, message: String(e && e.message ? e.message : e) });
+          }
+        }
+        sse.send({ type: "done" });
+        return sse.end();
+      }
+
+      if (req.method === "POST" && p === "/api/ai/summarize-batch") {
+        const body = await readJsonBody(req);
+        const provider = await resolveProvider(body);
+        const model = defaultModelFor(provider, body);
+        const { list, missing } = await ensureSessions(body.ids || []);
+        const sse = openSse(res);
+        if (missing.length) sse.send({ type: "warning", message: `未找到会话：${missing.join(", ")}` });
+        if (!list.length) {
+          sse.send({ type: "error", message: "未选择有效会话" });
+          return sse.end();
+        }
+        sse.send({ type: "start", provider: provider.id, model, count: list.length });
+        try {
+          for await (const ev of summarizeBatch(provider, model, list, {
+            lang: body.lang,
+            range: body.range,
+            maxChars: body.maxChars,
+            concurrency: body.concurrency,
+          })) {
+            if (!sse.open) return;
+            sse.send(ev);
+          }
+        } catch (e) {
+          sse.send({ type: "error", message: String(e && e.message ? e.message : e) });
+        }
+        sse.send({ type: "done" });
+        return sse.end();
+      }
+
+      if (req.method === "POST" && p === "/api/ai/chat") {
+        const body = await readJsonBody(req);
+        const provider = await resolveProvider(body);
+        const model = defaultModelFor(provider, body);
+        const question = String(body.question || "").trim();
+        const sse = openSse(res);
+        if (!question) {
+          sse.send({ type: "error", message: "请输入问题" });
+          return sse.end();
+        }
+        const { list, missing } = await ensureSessions(body.ids || []);
+        if (missing.length) sse.send({ type: "warning", message: `未找到会话：${missing.join(", ")}` });
+        if (!list.length) {
+          sse.send({ type: "error", message: "没有可用于提问的会话，请先筛选会话" });
+          return sse.end();
+        }
+        sse.send({ type: "start", provider: provider.id, model, count: list.length });
+        try {
+          for await (const ev of askSessions(provider, model, list, question, {
+            history: Array.isArray(body.history) ? body.history : [],
+            lang: body.lang,
+            budget: body.budget,
+            topK: body.topK,
+          })) {
+            if (!sse.open) return;
+            sse.send(ev);
+          }
+        } catch (e) {
+          sse.send({ type: "error", message: String(e && e.message ? e.message : e) });
+        }
+        sse.send({ type: "done" });
+        return sse.end();
+      }
+
+      if (req.method === "GET") return serveStatic(res, p);
 
       res.writeHead(405);
       res.end("方法不允许");
     } catch (e) {
+      if (res.headersSent) {
+        try {
+          res.write(`data: ${JSON.stringify({ type: "error", message: String(e && e.message ? e.message : e) })}\n\n`);
+        } catch {
+          /* ignore */
+        }
+        res.end();
+        return;
+      }
       sendJson(res, 500, { error: String(e && e.message ? e.message : e) });
     }
   });

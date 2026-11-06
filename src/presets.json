@@ -1,0 +1,1639 @@
+{
+  "generatedFrom": "yetone/magpie internal/provider/presets.go",
+  "presets": [
+    {
+      "id": "anthropic",
+      "name": "Anthropic",
+      "icon": "claude-color",
+      "kind": "vendor",
+      "anthropic": "https://api.anthropic.com",
+      "catalog": "anthropic",
+      "website": "https://console.anthropic.com",
+      "keysUrl": "https://console.anthropic.com/settings/keys",
+      "headerHints": [
+        "anthropic-workspace-id"
+      ]
+    },
+    {
+      "id": "openai",
+      "name": "OpenAI",
+      "icon": "openai",
+      "kind": "vendor",
+      "chat": "https://api.openai.com/v1",
+      "responses": "https://api.openai.com/v1",
+      "catalog": "openai",
+      "website": "https://platform.openai.com",
+      "keysUrl": "https://platform.openai.com/api-keys"
+    },
+    {
+      "id": "google",
+      "name": "Google Gemini",
+      "icon": "gemini-color",
+      "kind": "vendor",
+      "chat": "https://generativelanguage.googleapis.com/v1beta/openai",
+      "catalog": "google",
+      "website": "https://aistudio.google.com",
+      "keysUrl": "https://aistudio.google.com/apikey",
+      "note": "Gemini Developer API"
+    },
+    {
+      "id": "google-vertex",
+      "name": "Google Vertex AI",
+      "short": "Vertex AI",
+      "icon": "vertexai-color",
+      "kind": "vendor",
+      "website": "https://docs.cloud.google.com/gemini-enterprise-agent-platform/models",
+      "note": "your Google Cloud project, with gcloud's sign-in",
+      "noList": true,
+      "models": [
+        "gemini-3.8-flash",
+        "gemini-3.7-flash",
+        "gemini-3.6-flash",
+        "gemini-3.5-flash",
+        "gemini-3.5-flash-lite",
+        "gemini-4-argon",
+        "gemini-3.1-pro-preview",
+        "gemini-3.1-pro-preview-customtools",
+        "gemini-3.1-flash-lite",
+        "gemini-3-flash-preview",
+        "gemini-2.5-pro",
+        "gemini-2.5-flash",
+        "gemini-2.5-flash-lite",
+        "deepseek-ai/deepseek-v4.1-flash-maas",
+        "zai-org/glm-5.2-maas",
+        "openai/gpt-oss-120b-maas",
+        "claude-opus-5-5",
+        "claude-sonnet-5-5",
+        "claude-haiku-5-5",
+        "claude-fable-5-1"
+      ],
+      "headerHints": [
+        "X-Vertex-AI-LLM-Request-Type",
+        "X-Vertex-AI-LLM-Shared-Request-Type"
+      ]
+    },
+    {
+      "id": "deepseek",
+      "name": "DeepSeek",
+      "icon": "deepseek-color",
+      "kind": "vendor",
+      "chat": "https://api.deepseek.com/v1",
+      "responses": "https://api.deepseek.com/v1",
+      "anthropic": "https://api.deepseek.com/anthropic",
+      "catalog": "deepseek",
+      "website": "https://platform.deepseek.com",
+      "keysUrl": "https://platform.deepseek.com/api_keys"
+    },
+    {
+      "id": "xai",
+      "name": "xAI",
+      "icon": "xai",
+      "kind": "vendor",
+      "chat": "https://api.x.ai/v1",
+      "responses": "https://api.x.ai/v1",
+      "anthropic": "https://api.x.ai",
+      "catalog": "xai",
+      "website": "https://console.x.ai",
+      "keysUrl": "https://console.x.ai"
+    },
+    {
+      "id": "moonshot",
+      "name": "Kimi",
+      "icon": "kimi",
+      "kind": "vendor",
+      "chat": "https://api.moonshot.ai/v1",
+      "anthropic": "https://api.moonshot.ai/anthropic",
+      "catalog": "moonshotai",
+      "website": "https://platform.kimi.ai?aff=magpie",
+      "keysUrl": "https://platform.kimi.ai/console/api-keys?aff=magpie"
+    },
+    {
+      "id": "moonshot-cn",
+      "name": "Kimi (China)",
+      "icon": "kimi",
+      "kind": "vendor",
+      "chat": "https://api.moonshot.cn/v1",
+      "anthropic": "https://api.moonshot.cn/anthropic",
+      "catalog": "moonshotai",
+      "website": "https://platform.kimi.com?aff=magpie",
+      "keysUrl": "https://platform.kimi.com/console/api-keys?aff=magpie"
+    },
+    {
+      "id": "kimi-code",
+      "name": "Kimi Code",
+      "icon": "kimi",
+      "kind": "vendor",
+      "chat": "https://api.kimi.ai/coding/v1",
+      "anthropic": "https://api.kimi.ai/coding",
+      "catalog": "kimi-code-plan-global",
+      "website": "https://www.kimi.ai/code?aff=magpie",
+      "keysUrl": "https://www.kimi.ai/code/console?aff=magpie",
+      "note": "Membership"
+    },
+    {
+      "id": "kimi-code-cn",
+      "name": "Kimi Code (China)",
+      "icon": "kimi",
+      "kind": "vendor",
+      "chat": "https://api.kimi.com/coding/v1",
+      "anthropic": "https://api.kimi.com/coding",
+      "catalog": "kimi-code-plan-cn",
+      "website": "https://www.kimi.com/code?aff=magpie",
+      "keysUrl": "https://www.kimi.com/code/console?aff=magpie",
+      "note": "Membership"
+    },
+    {
+      "id": "zhipu",
+      "name": "Zhipu GLM",
+      "icon": "zhipu-color",
+      "kind": "vendor",
+      "chat": "https://open.bigmodel.cn/api/paas/v4",
+      "anthropic": "https://open.bigmodel.cn/api/anthropic",
+      "catalog": "zhipuai",
+      "website": "https://open.bigmodel.cn",
+      "keysUrl": "https://open.bigmodel.cn/usercenter/proj-mgmt/apikeys",
+      "regionLabel": "Plan",
+      "keyPlans": true,
+      "regions": [
+        {
+          "id": "api",
+          "name": "Pay as you go",
+          "chat": "https://open.bigmodel.cn/api/paas/v4",
+          "anthropic": "https://open.bigmodel.cn/api/anthropic"
+        },
+        {
+          "id": "coding",
+          "name": "Coding Plan",
+          "chat": "https://open.bigmodel.cn/api/coding/paas/v4",
+          "responses": "https://open.bigmodel.cn/api/v1",
+          "anthropic": "https://open.bigmodel.cn/api/anthropic"
+        }
+      ]
+    },
+    {
+      "id": "zai",
+      "name": "Z.ai",
+      "icon": "zai",
+      "kind": "vendor",
+      "chat": "https://api.z.ai/api/paas/v4",
+      "anthropic": "https://api.z.ai/api/anthropic",
+      "catalog": "zhipuai",
+      "website": "https://z.ai",
+      "keysUrl": "https://z.ai/manage-apikey/apikey-list",
+      "regionLabel": "Plan",
+      "keyPlans": true,
+      "regions": [
+        {
+          "id": "api",
+          "name": "Pay as you go",
+          "chat": "https://api.z.ai/api/paas/v4",
+          "anthropic": "https://api.z.ai/api/anthropic"
+        },
+        {
+          "id": "coding",
+          "name": "Coding Plan",
+          "chat": "https://api.z.ai/api/coding/paas/v4",
+          "responses": "https://api.z.ai/api/v1",
+          "anthropic": "https://api.z.ai/api/anthropic"
+        }
+      ]
+    },
+    {
+      "id": "minimax",
+      "name": "MiniMax",
+      "icon": "minimax-color",
+      "kind": "vendor",
+      "chat": "https://api.minimax.io/v1",
+      "anthropic": "https://api.minimax.io/anthropic",
+      "catalog": "minimax",
+      "website": "https://platform.minimax.io",
+      "keysUrl": "https://platform.minimax.io/user-center/basic-information/interface-key"
+    },
+    {
+      "id": "minimax-cn",
+      "name": "MiniMax (China)",
+      "icon": "minimax-color",
+      "kind": "vendor",
+      "chat": "https://api.minimaxi.com/v1",
+      "anthropic": "https://api.minimaxi.com/anthropic",
+      "catalog": "minimax",
+      "website": "https://platform.minimaxi.com",
+      "keysUrl": "https://platform.minimaxi.com/user-center/basic-information/interface-key"
+    },
+    {
+      "id": "stepfun",
+      "name": "StepFun",
+      "icon": "stepfun-color",
+      "kind": "vendor",
+      "chat": "https://api.stepfun.ai/step_plan/v1",
+      "anthropic": "https://api.stepfun.ai/step_plan",
+      "catalog": "stepfun-ai-step-plan, stepfun-ai",
+      "website": "https://platform.stepfun.ai",
+      "keysUrl": "https://platform.stepfun.ai/interface-key",
+      "regionLabel": "Plan",
+      "keyPlans": true,
+      "regions": [
+        {
+          "id": "plan",
+          "name": "Step Plan",
+          "chat": "https://api.stepfun.ai/step_plan/v1",
+          "anthropic": "https://api.stepfun.ai/step_plan"
+        },
+        {
+          "id": "api",
+          "name": "Pay as you go",
+          "chat": "https://api.stepfun.ai/v1",
+          "anthropic": "https://api.stepfun.ai"
+        }
+      ]
+    },
+    {
+      "id": "stepfun-cn",
+      "name": "StepFun (China)",
+      "icon": "stepfun-color",
+      "kind": "vendor",
+      "chat": "https://api.stepfun.com/step_plan/v1",
+      "anthropic": "https://api.stepfun.com/step_plan",
+      "catalog": "stepfun-step-plan, stepfun",
+      "website": "https://platform.stepfun.com",
+      "keysUrl": "https://platform.stepfun.com/interface-key",
+      "regionLabel": "Plan",
+      "keyPlans": true,
+      "regions": [
+        {
+          "id": "plan",
+          "name": "Step Plan",
+          "chat": "https://api.stepfun.com/step_plan/v1",
+          "anthropic": "https://api.stepfun.com/step_plan"
+        },
+        {
+          "id": "api",
+          "name": "Pay as you go",
+          "chat": "https://api.stepfun.com/v1",
+          "anthropic": "https://api.stepfun.com"
+        }
+      ]
+    },
+    {
+      "id": "xiaomi",
+      "name": "Xiaomi MiMo",
+      "icon": "mimocode",
+      "kind": "vendor",
+      "chat": "https://token-plan-cn.xiaomimimo.com/v1",
+      "responses": "https://token-plan-cn.xiaomimimo.com/v1",
+      "anthropic": "https://token-plan-cn.xiaomimimo.com/anthropic",
+      "catalog": "xiaomi-token-plan-cn, xiaomi",
+      "website": "https://platform.xiaomimimo.com",
+      "keysUrl": "https://platform.xiaomimimo.com/token-plan",
+      "note": "Token Plan · pay as you go",
+      "keyPlans": true,
+      "regions": [
+        {
+          "id": "plan-cn",
+          "name": "Plan · China",
+          "chat": "https://token-plan-cn.xiaomimimo.com/v1",
+          "responses": "https://token-plan-cn.xiaomimimo.com/v1",
+          "anthropic": "https://token-plan-cn.xiaomimimo.com/anthropic",
+          "catalog": "xiaomi-token-plan-cn, xiaomi"
+        },
+        {
+          "id": "plan-sgp",
+          "name": "Plan · Singapore",
+          "chat": "https://token-plan-sgp.xiaomimimo.com/v1",
+          "responses": "https://token-plan-sgp.xiaomimimo.com/v1",
+          "anthropic": "https://token-plan-sgp.xiaomimimo.com/anthropic",
+          "catalog": "xiaomi-token-plan-sgp, xiaomi"
+        },
+        {
+          "id": "plan-ams",
+          "name": "Plan · Europe",
+          "chat": "https://token-plan-ams.xiaomimimo.com/v1",
+          "responses": "https://token-plan-ams.xiaomimimo.com/v1",
+          "anthropic": "https://token-plan-ams.xiaomimimo.com/anthropic",
+          "catalog": "xiaomi-token-plan-ams, xiaomi"
+        },
+        {
+          "id": "api",
+          "name": "Pay as you go",
+          "chat": "https://api.xiaomimimo.com/v1",
+          "responses": "https://api.xiaomimimo.com/v1",
+          "anthropic": "https://api.xiaomimimo.com/anthropic",
+          "catalog": "xiaomi"
+        }
+      ]
+    },
+    {
+      "id": "longcat",
+      "name": "LongCat",
+      "icon": "longcat",
+      "kind": "vendor",
+      "chat": "https://api.longcat.chat/openai/v1",
+      "responses": "https://api.longcat.chat/openai/v1",
+      "anthropic": "https://api.longcat.chat/anthropic",
+      "catalog": "longcat",
+      "website": "https://longcat.chat/platform/docs/zh/api-docs",
+      "keysUrl": "https://longcat.chat/platform/api_keys"
+    },
+    {
+      "id": "baidu-qianfan",
+      "name": "Baidu Qianfan",
+      "icon": "baiducloud-color",
+      "kind": "vendor",
+      "chat": "https://qianfan.baidubce.com/v2/tokenplan/personal",
+      "responses": "https://qianfan.baidubce.com/v2/tokenplan/personal",
+      "anthropic": "https://qianfan.baidubce.com/anthropic/tokenplan/personal",
+      "website": "https://cloud.baidu.com/doc/qianfan/s/Dmrabu8b6",
+      "keysUrl": "https://console.bce.baidu.com/qianfan/resource/token-plan",
+      "note": "Token Plan · pay as you go",
+      "regionLabel": "Plan",
+      "keyPlans": true,
+      "regions": [
+        {
+          "id": "personal",
+          "name": "Token Plan Personal",
+          "chat": "https://qianfan.baidubce.com/v2/tokenplan/personal",
+          "responses": "https://qianfan.baidubce.com/v2/tokenplan/personal",
+          "anthropic": "https://qianfan.baidubce.com/anthropic/tokenplan/personal"
+        },
+        {
+          "id": "team",
+          "name": "Token Plan Enterprise",
+          "chat": "https://qianfan.baidubce.com/v2/tokenplan/team",
+          "responses": "https://qianfan.baidubce.com/v2/tokenplan/team",
+          "anthropic": "https://qianfan.baidubce.com/anthropic/tokenplan/team"
+        },
+        {
+          "id": "api",
+          "name": "Pay as you go",
+          "chat": "https://qianfan.baidubce.com/v2",
+          "responses": "https://qianfan.baidubce.com/v2",
+          "anthropic": "https://qianfan.baidubce.com/anthropic",
+          "keysUrl": "https://console.bce.baidu.com/iam/#/iam/apikey/list",
+          "lists": true
+        }
+      ],
+      "models": [
+        "qianfan-code-latest",
+        "deepseek-v4.1-flash",
+        "deepseek-v4-pro",
+        "deepseek-v4-pro-0813",
+        "deepseek-v4-flash",
+        "deepseek-v4-flash-0731",
+        "deepseek-v3.2",
+        "glm-5.3",
+        "glm-5.3-flash",
+        "glm-5.2",
+        "glm-5.1",
+        "glm-5"
+      ]
+    },
+    {
+      "id": "tencent-cloud",
+      "name": "Tencent Cloud",
+      "icon": "tencentcloud-color",
+      "kind": "vendor",
+      "chat": "https://tokenhub.tencentmaas.com/plan/v3",
+      "responses": "https://tokenhub.tencentmaas.com/plan/v3",
+      "anthropic": "https://tokenhub.tencentmaas.com/plan/anthropic",
+      "website": "https://cloud.tencent.com/document/product/1823/130060",
+      "keysUrl": "https://console.cloud.tencent.com/tokenhub/tokenplan",
+      "note": "Token Plan · pay as you go",
+      "keyPlans": true,
+      "hosts": true,
+      "regions": [
+        {
+          "id": "plan",
+          "name": "Plan · China",
+          "chat": "https://tokenhub.tencentmaas.com/plan/v3",
+          "responses": "https://tokenhub.tencentmaas.com/plan/v3",
+          "anthropic": "https://tokenhub.tencentmaas.com/plan/anthropic",
+          "website": "https://cloud.tencent.com/document/product/1823/130060",
+          "keysUrl": "https://console.cloud.tencent.com/tokenhub/tokenplan",
+          "models": [
+            "tc-code-latest",
+            "auto",
+            "glm-5.3",
+            "glm-5.3-flash",
+            "glm-5.2",
+            "glm-5.1",
+            "glm-5",
+            "kimi-k3",
+            "kimi-k2.7-code",
+            "kimi-k2.7-code-highspeed",
+            "kimi-k2.6",
+            "deepseek-v4-pro-202606",
+            "deepseek-v4-flash-202605",
+            "deepseek-v4.1-flash",
+            "deepseek-v4-pro",
+            "deepseek-v4-pro-0813",
+            "deepseek-v4-flash-0731",
+            "minimax-m3",
+            "minimax-m2.7",
+            "hy4-preview",
+            "hy3",
+            "mimo-v2.6-pro",
+            "mimo-v2.6-flash"
+          ]
+        },
+        {
+          "id": "cn",
+          "name": "Pay as you go · China",
+          "chat": "https://tokenhub.tencentmaas.com/v1",
+          "responses": "https://tokenhub.tencentmaas.com/v1",
+          "anthropic": "https://tokenhub.tencentmaas.com",
+          "catalog": "tencent-tokenhub",
+          "website": "https://cloud.tencent.com/document/product/1823/130078",
+          "keysUrl": "https://console.cloud.tencent.com/tokenhub/apikey"
+        },
+        {
+          "id": "intl",
+          "name": "Pay as you go · Global",
+          "chat": "https://tokenhub-intl.tencentmaas.com/v1",
+          "responses": "https://tokenhub-intl.tencentmaas.com/v1",
+          "anthropic": "https://tokenhub-intl.tencentmaas.com",
+          "catalog": "tencent-tokenhub",
+          "website": "https://www.tencentcloud.com/document/product/1300/78939",
+          "keysUrl": "https://console.tencentcloud.com/tokenhub/apikey"
+        },
+        {
+          "id": "enterprise-intl",
+          "name": "Enterprise plan · Global",
+          "chat": "https://tokenhub-intl.tencentmaas.com/plan/v3",
+          "responses": "https://tokenhub-intl.tencentmaas.com/plan/v3",
+          "anthropic": "https://tokenhub-intl.tencentmaas.com/plan/anthropic",
+          "website": "https://cloud.tencent.com/document/product/1823/130659",
+          "keysUrl": "https://console.tencentcloud.com/tokenhub/tokenplan",
+          "models": [
+            "auto",
+            "hy4-preview",
+            "glm-5.3",
+            "glm-5.3-flash",
+            "glm-5.2",
+            "kimi-k3",
+            "kimi-k2.7-code",
+            "kimi-k2.7-code-highspeed",
+            "minimax-m3",
+            "deepseek-v4.1-flash",
+            "deepseek-v4-pro",
+            "deepseek-v4-pro-0813",
+            "deepseek-v4-flash-0731",
+            "deepseek-v4-pro-202606",
+            "deepseek-v4-flash-202605",
+            "mimo-v2.6-pro",
+            "mimo-v2.6-flash"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "huaweicloud",
+      "name": "Huawei Cloud MaaS",
+      "short": "Huawei Cloud",
+      "icon": "huaweicloud-color",
+      "kind": "vendor",
+      "chat": "https://api.modelarts-maas.com/plan/v2",
+      "anthropic": "https://api.modelarts-maas.com/plan/anthropic",
+      "website": "https://support.huaweicloud.com/Token-plan-maas/tokenplan-maas-0001.html",
+      "keysUrl": "https://console.huaweicloud.com/modelarts/?#/model-studio/authmanage",
+      "note": "Token Plan · 西南-贵阳一",
+      "regionLabel": "Plan",
+      "keyPlans": true,
+      "regions": [
+        {
+          "id": "plan",
+          "name": "Token Plan",
+          "chat": "https://api.modelarts-maas.com/plan/v2",
+          "anthropic": "https://api.modelarts-maas.com/plan/anthropic"
+        },
+        {
+          "id": "api",
+          "name": "Pay as you go",
+          "chat": "https://api.modelarts-maas.com/openai/v1",
+          "anthropic": "https://api.modelarts-maas.com/anthropic"
+        }
+      ],
+      "models": [
+        "glm-5.3",
+        "glm-5.1",
+        "kimi-k2.6",
+        "deepseek-v4.1-flash",
+        "deepseek-v4-flash"
+      ]
+    },
+    {
+      "id": "volcengine",
+      "name": "Volcengine Ark",
+      "icon": "volcengine-color",
+      "kind": "vendor",
+      "chat": "https://ark.cn-beijing.volces.com/api/coding/v3",
+      "responses": "https://ark.cn-beijing.volces.com/api/coding/v3",
+      "anthropic": "https://ark.cn-beijing.volces.com/api/coding",
+      "website": "https://www.volcengine.com/docs/82379/1925114",
+      "keysUrl": "https://ark.volcengine.com/region:cn-beijing/apikey",
+      "note": "火山方舟 · Coding / Agent Plan",
+      "regionLabel": "Plan",
+      "keyPlans": true,
+      "regions": [
+        {
+          "id": "coding",
+          "name": "Coding Plan",
+          "chat": "https://ark.cn-beijing.volces.com/api/coding/v3",
+          "responses": "https://ark.cn-beijing.volces.com/api/coding/v3",
+          "anthropic": "https://ark.cn-beijing.volces.com/api/coding",
+          "models": [
+            "ark-code-latest",
+            "doubao-seed-evolving",
+            "doubao-seed-2.1-pro",
+            "doubao-seed-2.1-lite",
+            "doubao-seed-2.0-mini",
+            "minimax-m3",
+            "glm-5.3",
+            "glm-5.3-flash",
+            "deepseek-v4.1-flash",
+            "deepseek-v4.1-flash-economy",
+            "deepseek-v4-flash",
+            "deepseek-v4-pro",
+            "kimi-k2.8-preview",
+            "kimi-k3",
+            "kimi-k3.1-pro"
+          ]
+        },
+        {
+          "id": "agent",
+          "name": "Agent Plan",
+          "chat": "https://ark.cn-beijing.volces.com/api/plan/v3",
+          "responses": "https://ark.cn-beijing.volces.com/api/plan/v3",
+          "anthropic": "https://ark.cn-beijing.volces.com/api/plan",
+          "models": [
+            "ark-code-latest",
+            "doubao-seed-evolving",
+            "doubao-seed-2.1-pro",
+            "doubao-seed-2.1-lite",
+            "doubao-seed-2.0-mini",
+            "minimax-m3",
+            "glm-5.3",
+            "glm-5.3-flash",
+            "deepseek-v4.1-flash",
+            "deepseek-v4.1-flash-economy",
+            "deepseek-v4-flash",
+            "deepseek-v4-pro",
+            "kimi-k2.8-preview",
+            "kimi-k3",
+            "kimi-k3.1-pro"
+          ]
+        },
+        {
+          "id": "api",
+          "name": "Pay as you go",
+          "chat": "https://ark.cn-beijing.volces.com/api/v3",
+          "responses": "https://ark.cn-beijing.volces.com/api/v3",
+          "lists": true
+        }
+      ]
+    },
+    {
+      "id": "qwen",
+      "name": "Qwen",
+      "icon": "qwen-color",
+      "kind": "vendor",
+      "chat": "https://dashscope-intl.aliyuncs.com/compatible-mode/v1",
+      "anthropic": "https://dashscope-intl.aliyuncs.com/apps/anthropic",
+      "catalog": "alibaba",
+      "website": "https://modelstudio.console.alibabacloud.com",
+      "keysUrl": "https://modelstudio.console.alibabacloud.com/?tab=playground#/api-key",
+      "note": "DashScope · intl"
+    },
+    {
+      "id": "qwen-cn",
+      "name": "Qwen (China)",
+      "icon": "qwen-color",
+      "kind": "vendor",
+      "chat": "https://dashscope.aliyuncs.com/compatible-mode/v1",
+      "anthropic": "https://dashscope.aliyuncs.com/apps/anthropic",
+      "catalog": "alibaba",
+      "website": "https://bailian.console.aliyun.com",
+      "keysUrl": "https://bailian.console.aliyun.com/?tab=model#/api-key",
+      "note": "DashScope · China"
+    },
+    {
+      "id": "qwen-token-plan",
+      "name": "Qwen Token Plan",
+      "short": "Qwen Plan",
+      "icon": "qwen-color",
+      "kind": "vendor",
+      "chat": "https://token-plan.maas.qianwenaiapi.com/compatible-mode/v1",
+      "anthropic": "https://token-plan.maas.qianwenaiapi.com/apps/anthropic",
+      "website": "https://platform.qianwenai.com/docs/token-plan/overview",
+      "keysUrl": "https://platform.qianwenai.com/home/analytics/token-plan/individual",
+      "note": "Qwen AI platform · subscription",
+      "models": [
+        "auto",
+        "qwen3.8-max",
+        "qwen3.8-flash",
+        "qwen3.7-max",
+        "qwen3.7-plus",
+        "qwen3.6-flash",
+        "deepseek-v4.1-flash",
+        "deepseek-v4-pro",
+        "deepseek-v4-pro-0813",
+        "deepseek-v4-flash-0731",
+        "glm-5.3",
+        "glm-5.2"
+      ]
+    },
+    {
+      "id": "bailian-token-plan",
+      "name": "Bailian Token Plan",
+      "short": "Bailian Plan",
+      "icon": "bailian-color",
+      "kind": "vendor",
+      "chat": "https://token-plan.cn-beijing.maas.aliyuncs.com/compatible-mode/v1",
+      "anthropic": "https://token-plan.cn-beijing.maas.aliyuncs.com/apps/anthropic",
+      "decide": "https://token-plan.cn-beijing.maas.aliyuncs.com/compatible-mode/v1",
+      "website": "https://help.aliyun.com/zh/model-studio/token-plan-overview",
+      "keysUrl": "https://bailian.console.aliyun.com/cn-beijing/subscription/token-plan/personal",
+      "note": "Alibaba Cloud Bailian · subscription",
+      "models": [
+        "auto",
+        "qwen3.8-max",
+        "qwen3.8-flash",
+        "qwen3.7-max",
+        "qwen3.7-plus",
+        "qwen3.6-flash",
+        "deepseek-v4.1-flash",
+        "deepseek-v4-pro",
+        "deepseek-v4-pro-0813",
+        "deepseek-v4-flash-0731",
+        "glm-5.3",
+        "glm-5.2"
+      ]
+    },
+    {
+      "id": "qwencloud-token-plan",
+      "name": "Qwen Cloud Token Plan",
+      "short": "Qwen Cloud Plan",
+      "icon": "qwen-color",
+      "kind": "vendor",
+      "chat": "https://token-plan.maas.qwencloudapi.com/compatible-mode/v1",
+      "anthropic": "https://token-plan.maas.qwencloudapi.com/apps/anthropic",
+      "website": "https://docs.qwencloud.com/token-plan/overview",
+      "keysUrl": "https://home.qwencloud.com/analytics/token-plan/individual",
+      "note": "Qwen Cloud · subscription",
+      "models": [
+        "auto",
+        "qwen3.8-max",
+        "qwen3.8-flash",
+        "qwen3.7-max",
+        "qwen3.7-plus",
+        "qwen3.6-flash",
+        "deepseek-v4.1-flash",
+        "deepseek-v4.1-flash-1017",
+        "deepseek-v4-pro",
+        "deepseek-v4-pro-0813",
+        "deepseek-v4-flash-0731",
+        "glm-5.3",
+        "glm-5.2"
+      ]
+    },
+    {
+      "id": "qwencloud",
+      "name": "Qwen Cloud",
+      "icon": "qwen-color",
+      "kind": "vendor",
+      "chat": "https://ap-southeast-1.maas.qwencloudapi.com/compatible-mode/v1",
+      "anthropic": "https://ap-southeast-1.maas.qwencloudapi.com/apps/anthropic",
+      "catalog": "alibaba",
+      "website": "https://docs.qwencloud.com/developer-guides/getting-started/regions",
+      "keysUrl": "https://home.qwencloud.com/api-keys",
+      "note": "Qwen Cloud · pay as you go",
+      "regions": [
+        {
+          "id": "ap-southeast-1",
+          "name": "ap-southeast-1",
+          "chat": "https://ap-southeast-1.maas.qwencloudapi.com/compatible-mode/v1",
+          "anthropic": "https://ap-southeast-1.maas.qwencloudapi.com/apps/anthropic"
+        },
+        {
+          "id": "us-east-1",
+          "name": "us-east-1",
+          "chat": "https://us-east-1.maas.qwencloudapi.com/compatible-mode/v1",
+          "anthropic": "https://us-east-1.maas.qwencloudapi.com/apps/anthropic"
+        },
+        {
+          "id": "eu-central-1",
+          "name": "eu-central-1",
+          "chat": "https://eu-central-1.maas.qwencloudapi.com/compatible-mode/v1",
+          "anthropic": "https://eu-central-1.maas.qwencloudapi.com/apps/anthropic"
+        },
+        {
+          "id": "ap-northeast-1",
+          "name": "ap-northeast-1",
+          "chat": "https://ap-northeast-1.maas.qwencloudapi.com/compatible-mode/v1",
+          "anthropic": "https://ap-northeast-1.maas.qwencloudapi.com/apps/anthropic"
+        },
+        {
+          "id": "cn-hongkong",
+          "name": "cn-hongkong",
+          "chat": "https://cn-hongkong.maas.qwencloudapi.com/compatible-mode/v1",
+          "anthropic": "https://cn-hongkong.maas.qwencloudapi.com/apps/anthropic"
+        },
+        {
+          "id": "cn-beijing",
+          "name": "cn-beijing",
+          "chat": "https://cn-beijing.maas.qwencloudapi.com/compatible-mode/v1",
+          "anthropic": "https://cn-beijing.maas.qwencloudapi.com/apps/anthropic"
+        }
+      ]
+    },
+    {
+      "id": "mistral",
+      "name": "Mistral",
+      "icon": "mistral-color",
+      "kind": "vendor",
+      "chat": "https://api.mistral.ai/v1",
+      "catalog": "mistral",
+      "website": "https://console.mistral.ai",
+      "keysUrl": "https://console.mistral.ai/api-keys"
+    },
+    {
+      "id": "voyage",
+      "name": "Voyage AI",
+      "icon": "voyage-color",
+      "kind": "vendor",
+      "chat": "https://api.voyageai.com/v1",
+      "website": "https://docs.voyageai.com",
+      "keysUrl": "https://dashboard.voyageai.com/organization/api-keys",
+      "noList": true
+    },
+    {
+      "id": "groq",
+      "name": "Groq",
+      "icon": "groq",
+      "kind": "vendor",
+      "chat": "https://api.groq.com/openai/v1",
+      "responses": "https://api.groq.com/openai/v1",
+      "catalog": "groq",
+      "website": "https://console.groq.com",
+      "keysUrl": "https://console.groq.com/keys",
+      "hosts": true
+    },
+    {
+      "id": "bedrock",
+      "name": "Amazon Bedrock",
+      "icon": "bedrock-color",
+      "kind": "vendor",
+      "chat": "https://bedrock-runtime.us-east-1.amazonaws.com/openai/v1",
+      "responses": "https://bedrock-runtime.us-east-1.amazonaws.com/openai/v1",
+      "anthropic": "https://bedrock-runtime.us-east-1.amazonaws.com/anthropic",
+      "website": "https://aws.amazon.com/bedrock/",
+      "keysUrl": "https://console.aws.amazon.com/bedrock/home#/api-keys",
+      "note": "Bedrock API key",
+      "regions": [
+        {
+          "id": "us-east-1",
+          "name": "us-east-1",
+          "chat": "https://bedrock-runtime.us-east-1.amazonaws.com/openai/v1",
+          "responses": "https://bedrock-runtime.us-east-1.amazonaws.com/openai/v1",
+          "anthropic": "https://bedrock-runtime.us-east-1.amazonaws.com/anthropic"
+        },
+        {
+          "id": "us-east-2",
+          "name": "us-east-2",
+          "chat": "https://bedrock-runtime.us-east-2.amazonaws.com/openai/v1",
+          "responses": "https://bedrock-runtime.us-east-2.amazonaws.com/openai/v1",
+          "anthropic": "https://bedrock-runtime.us-east-2.amazonaws.com/anthropic"
+        },
+        {
+          "id": "us-west-2",
+          "name": "us-west-2",
+          "chat": "https://bedrock-runtime.us-west-2.amazonaws.com/openai/v1",
+          "responses": "https://bedrock-runtime.us-west-2.amazonaws.com/openai/v1",
+          "anthropic": "https://bedrock-runtime.us-west-2.amazonaws.com/anthropic"
+        },
+        {
+          "id": "eu-central-1",
+          "name": "eu-central-1",
+          "chat": "https://bedrock-runtime.eu-central-1.amazonaws.com/openai/v1",
+          "responses": "https://bedrock-runtime.eu-central-1.amazonaws.com/openai/v1",
+          "anthropic": "https://bedrock-runtime.eu-central-1.amazonaws.com/anthropic"
+        },
+        {
+          "id": "eu-west-1",
+          "name": "eu-west-1",
+          "chat": "https://bedrock-runtime.eu-west-1.amazonaws.com/openai/v1",
+          "responses": "https://bedrock-runtime.eu-west-1.amazonaws.com/openai/v1",
+          "anthropic": "https://bedrock-runtime.eu-west-1.amazonaws.com/anthropic"
+        },
+        {
+          "id": "eu-west-3",
+          "name": "eu-west-3",
+          "chat": "https://bedrock-runtime.eu-west-3.amazonaws.com/openai/v1",
+          "responses": "https://bedrock-runtime.eu-west-3.amazonaws.com/openai/v1",
+          "anthropic": "https://bedrock-runtime.eu-west-3.amazonaws.com/anthropic"
+        },
+        {
+          "id": "ap-northeast-1",
+          "name": "ap-northeast-1",
+          "chat": "https://bedrock-runtime.ap-northeast-1.amazonaws.com/openai/v1",
+          "responses": "https://bedrock-runtime.ap-northeast-1.amazonaws.com/openai/v1",
+          "anthropic": "https://bedrock-runtime.ap-northeast-1.amazonaws.com/anthropic"
+        },
+        {
+          "id": "ap-southeast-1",
+          "name": "ap-southeast-1",
+          "chat": "https://bedrock-runtime.ap-southeast-1.amazonaws.com/openai/v1",
+          "responses": "https://bedrock-runtime.ap-southeast-1.amazonaws.com/openai/v1",
+          "anthropic": "https://bedrock-runtime.ap-southeast-1.amazonaws.com/anthropic"
+        },
+        {
+          "id": "ap-southeast-2",
+          "name": "ap-southeast-2",
+          "chat": "https://bedrock-runtime.ap-southeast-2.amazonaws.com/openai/v1",
+          "responses": "https://bedrock-runtime.ap-southeast-2.amazonaws.com/openai/v1",
+          "anthropic": "https://bedrock-runtime.ap-southeast-2.amazonaws.com/anthropic"
+        },
+        {
+          "id": "ap-south-1",
+          "name": "ap-south-1",
+          "chat": "https://bedrock-runtime.ap-south-1.amazonaws.com/openai/v1",
+          "responses": "https://bedrock-runtime.ap-south-1.amazonaws.com/openai/v1",
+          "anthropic": "https://bedrock-runtime.ap-south-1.amazonaws.com/anthropic"
+        }
+      ],
+      "models": [
+        "global.anthropic.claude-opus-5-5",
+        "global.anthropic.claude-sonnet-5-5",
+        "global.anthropic.claude-sonnet-5",
+        "global.anthropic.claude-opus-5",
+        "global.anthropic.claude-fable-5-1",
+        "global.anthropic.claude-opus-4-8",
+        "global.anthropic.claude-opus-4-7",
+        "global.anthropic.claude-haiku-4-5-20251001-v1:0",
+        "global.openai.gpt-6-astra",
+        "global.openai.gpt-6-sol",
+        "global.openai.gpt-6-luna",
+        "openai.gpt-oss-120b-1:0",
+        "openai.gpt-oss-20b-1:0",
+        "qwen.qwen3-coder-480b-a35b-v1:0",
+        "deepseek.v3.2",
+        "moonshotai.kimi-k2.5",
+        "zai.glm-5",
+        "minimax.minimax-m2.5"
+      ]
+    },
+    {
+      "id": "bedrock-mantle",
+      "name": "Amazon Bedrock (Mantle)",
+      "short": "Bedrock Mantle",
+      "icon": "bedrock-color",
+      "kind": "vendor",
+      "chat": "https://bedrock-mantle.us-east-1.api.aws/v1",
+      "responses": "https://bedrock-mantle.us-east-1.api.aws/v1",
+      "anthropic": "https://bedrock-mantle.us-east-1.api.aws/anthropic",
+      "website": "https://docs.aws.amazon.com/bedrock/latest/userguide/endpoints.html",
+      "keysUrl": "https://console.aws.amazon.com/bedrock/home#/api-keys",
+      "note": "Bedrock API key",
+      "hosts": true,
+      "regions": [
+        {
+          "id": "us-east-1",
+          "name": "us-east-1",
+          "chat": "https://bedrock-mantle.us-east-1.api.aws/v1",
+          "responses": "https://bedrock-mantle.us-east-1.api.aws/v1",
+          "anthropic": "https://bedrock-mantle.us-east-1.api.aws/anthropic"
+        },
+        {
+          "id": "us-east-2",
+          "name": "us-east-2",
+          "chat": "https://bedrock-mantle.us-east-2.api.aws/v1",
+          "responses": "https://bedrock-mantle.us-east-2.api.aws/v1",
+          "anthropic": "https://bedrock-mantle.us-east-2.api.aws/anthropic"
+        },
+        {
+          "id": "us-west-2",
+          "name": "us-west-2",
+          "chat": "https://bedrock-mantle.us-west-2.api.aws/v1",
+          "responses": "https://bedrock-mantle.us-west-2.api.aws/v1",
+          "anthropic": "https://bedrock-mantle.us-west-2.api.aws/anthropic"
+        },
+        {
+          "id": "eu-central-1",
+          "name": "eu-central-1",
+          "chat": "https://bedrock-mantle.eu-central-1.api.aws/v1",
+          "responses": "https://bedrock-mantle.eu-central-1.api.aws/v1",
+          "anthropic": "https://bedrock-mantle.eu-central-1.api.aws/anthropic"
+        },
+        {
+          "id": "eu-central-2",
+          "name": "eu-central-2",
+          "chat": "https://bedrock-mantle.eu-central-2.api.aws/v1",
+          "responses": "https://bedrock-mantle.eu-central-2.api.aws/v1",
+          "anthropic": "https://bedrock-mantle.eu-central-2.api.aws/anthropic"
+        },
+        {
+          "id": "eu-north-1",
+          "name": "eu-north-1",
+          "chat": "https://bedrock-mantle.eu-north-1.api.aws/v1",
+          "responses": "https://bedrock-mantle.eu-north-1.api.aws/v1",
+          "anthropic": "https://bedrock-mantle.eu-north-1.api.aws/anthropic"
+        },
+        {
+          "id": "eu-south-1",
+          "name": "eu-south-1",
+          "chat": "https://bedrock-mantle.eu-south-1.api.aws/v1",
+          "responses": "https://bedrock-mantle.eu-south-1.api.aws/v1",
+          "anthropic": "https://bedrock-mantle.eu-south-1.api.aws/anthropic"
+        },
+        {
+          "id": "eu-west-1",
+          "name": "eu-west-1",
+          "chat": "https://bedrock-mantle.eu-west-1.api.aws/v1",
+          "responses": "https://bedrock-mantle.eu-west-1.api.aws/v1",
+          "anthropic": "https://bedrock-mantle.eu-west-1.api.aws/anthropic"
+        },
+        {
+          "id": "eu-west-2",
+          "name": "eu-west-2",
+          "chat": "https://bedrock-mantle.eu-west-2.api.aws/v1",
+          "responses": "https://bedrock-mantle.eu-west-2.api.aws/v1",
+          "anthropic": "https://bedrock-mantle.eu-west-2.api.aws/anthropic"
+        },
+        {
+          "id": "ap-northeast-1",
+          "name": "ap-northeast-1",
+          "chat": "https://bedrock-mantle.ap-northeast-1.api.aws/v1",
+          "responses": "https://bedrock-mantle.ap-northeast-1.api.aws/v1",
+          "anthropic": "https://bedrock-mantle.ap-northeast-1.api.aws/anthropic"
+        },
+        {
+          "id": "ap-northeast-2",
+          "name": "ap-northeast-2",
+          "chat": "https://bedrock-mantle.ap-northeast-2.api.aws/v1",
+          "responses": "https://bedrock-mantle.ap-northeast-2.api.aws/v1",
+          "anthropic": "https://bedrock-mantle.ap-northeast-2.api.aws/anthropic"
+        },
+        {
+          "id": "ap-south-1",
+          "name": "ap-south-1",
+          "chat": "https://bedrock-mantle.ap-south-1.api.aws/v1",
+          "responses": "https://bedrock-mantle.ap-south-1.api.aws/v1",
+          "anthropic": "https://bedrock-mantle.ap-south-1.api.aws/anthropic"
+        },
+        {
+          "id": "ap-southeast-1",
+          "name": "ap-southeast-1",
+          "chat": "https://bedrock-mantle.ap-southeast-1.api.aws/v1",
+          "responses": "https://bedrock-mantle.ap-southeast-1.api.aws/v1",
+          "anthropic": "https://bedrock-mantle.ap-southeast-1.api.aws/anthropic"
+        },
+        {
+          "id": "ap-southeast-2",
+          "name": "ap-southeast-2",
+          "chat": "https://bedrock-mantle.ap-southeast-2.api.aws/v1",
+          "responses": "https://bedrock-mantle.ap-southeast-2.api.aws/v1",
+          "anthropic": "https://bedrock-mantle.ap-southeast-2.api.aws/anthropic"
+        },
+        {
+          "id": "ap-southeast-3",
+          "name": "ap-southeast-3",
+          "chat": "https://bedrock-mantle.ap-southeast-3.api.aws/v1",
+          "responses": "https://bedrock-mantle.ap-southeast-3.api.aws/v1",
+          "anthropic": "https://bedrock-mantle.ap-southeast-3.api.aws/anthropic"
+        },
+        {
+          "id": "ap-southeast-4",
+          "name": "ap-southeast-4",
+          "chat": "https://bedrock-mantle.ap-southeast-4.api.aws/v1",
+          "responses": "https://bedrock-mantle.ap-southeast-4.api.aws/v1",
+          "anthropic": "https://bedrock-mantle.ap-southeast-4.api.aws/anthropic"
+        },
+        {
+          "id": "sa-east-1",
+          "name": "sa-east-1",
+          "chat": "https://bedrock-mantle.sa-east-1.api.aws/v1",
+          "responses": "https://bedrock-mantle.sa-east-1.api.aws/v1",
+          "anthropic": "https://bedrock-mantle.sa-east-1.api.aws/anthropic"
+        }
+      ]
+    },
+    {
+      "id": "azure",
+      "name": "Azure OpenAI",
+      "icon": "azure-color",
+      "kind": "vendor",
+      "catalog": "azure, openai",
+      "website": "https://ai.azure.com",
+      "keysUrl": "https://portal.azure.com/#view/Microsoft_Azure_ProjectOxford/CognitiveServicesHub/~/OpenAI",
+      "note": "your resource's endpoint and key",
+      "endpoint": "https://<resource>.openai.azure.com",
+      "endpointHint": "Your resource's endpoint, from Keys and Endpoint in the Azure portal. Once added, magpie asks the resource for its deployments with this key, over its v1 API; the deployments' names are the model ids.",
+      "hosts": true
+    },
+    {
+      "id": "ollama-cloud",
+      "name": "Ollama Cloud",
+      "icon": "ollama",
+      "kind": "vendor",
+      "chat": "https://ollama.com/v1",
+      "anthropic": "https://ollama.com",
+      "decide": "https://ollama.com/v1",
+      "catalog": "ollama-cloud",
+      "website": "https://docs.ollama.com/cloud",
+      "keysUrl": "https://ollama.com/settings/keys",
+      "note": "cloud models, with an API key",
+      "hosts": true
+    },
+    {
+      "id": "nous",
+      "name": "Nous Portal",
+      "icon": "nousresearch",
+      "kind": "vendor",
+      "chat": "https://inference-api.nousresearch.com/v1",
+      "website": "https://portal.nousresearch.com",
+      "keysUrl": "https://portal.nousresearch.com",
+      "note": "Nous Research · Hermes and other models",
+      "hosts": true
+    },
+    {
+      "id": "openrouter",
+      "name": "OpenRouter",
+      "icon": "openrouter",
+      "kind": "relay",
+      "chat": "https://openrouter.ai/api/v1",
+      "anthropic": "https://openrouter.ai/api",
+      "decide": "https://openrouter.ai/api/v1",
+      "catalog": "openrouter",
+      "website": "https://openrouter.ai",
+      "keysUrl": "https://openrouter.ai/keys",
+      "headerHints": [
+        "HTTP-Referer",
+        "X-OpenRouter-Title"
+      ]
+    },
+    {
+      "id": "opencode-go",
+      "name": "OpenCode Go",
+      "icon": "opencode",
+      "kind": "relay",
+      "chat": "https://opencode.ai/zen/go/v1",
+      "responses": "https://opencode.ai/zen/go/v1",
+      "anthropic": "https://opencode.ai/zen/go",
+      "catalog": "opencode-go",
+      "website": "https://opencode.ai/docs/go",
+      "keysUrl": "https://opencode.ai/auth",
+      "note": "open coding models, $10/month"
+    },
+    {
+      "id": "clinepass",
+      "name": "ClinePass",
+      "icon": "cline",
+      "kind": "relay",
+      "chat": "https://api.cline.bot/api/v1",
+      "website": "https://docs.cline.bot/getting-started/clinepass",
+      "keysUrl": "https://app.cline.bot",
+      "note": "open coding models, $9.99/month",
+      "only": "cline-pass/",
+      "models": [
+        "cline-pass/glm-5.3",
+        "cline-pass/glm-5.3-flash",
+        "cline-pass/kimi-k3",
+        "cline-pass/deepseek-v4-pro",
+        "cline-pass/deepseek-v4.1-flash",
+        "cline-pass/mimo-v2.5",
+        "cline-pass/mimo-v2.5-pro",
+        "cline-pass/minimax-m3",
+        "cline-pass/muse-spark-1.3-contributor",
+        "cline-pass/qwen3.8-max",
+        "cline-pass/qwen3.7-max",
+        "cline-pass/qwen3.7-plus"
+      ]
+    },
+    {
+      "id": "opencode-zen",
+      "name": "OpenCode Zen",
+      "icon": "opencode",
+      "kind": "relay",
+      "chat": "https://opencode.ai/zen/v1",
+      "responses": "https://opencode.ai/zen/v1",
+      "anthropic": "https://opencode.ai/zen",
+      "decide": "https://opencode.ai/zen/v1",
+      "catalog": "opencode",
+      "website": "https://opencode.ai/docs/zen",
+      "keysUrl": "https://opencode.ai/auth",
+      "keyHint": "optional: free models need no key",
+      "noKey": true
+    },
+    {
+      "id": "kilo",
+      "name": "Kilo Gateway",
+      "icon": "kilo",
+      "kind": "relay",
+      "chat": "https://api.kilo.ai/api/openrouter",
+      "website": "https://kilo.ai/docs/gateway",
+      "keysUrl": "https://app.kilo.ai",
+      "note": "free models with no key",
+      "keyHint": "optional: free models need no key",
+      "noKey": true
+    },
+    {
+      "id": "commandcode",
+      "name": "Command Code",
+      "icon": "commandcode",
+      "kind": "relay",
+      "chat": "https://api.commandcode.ai/provider/v1",
+      "responses": "https://api.commandcode.ai/provider/v1",
+      "anthropic": "https://api.commandcode.ai/provider",
+      "website": "https://commandcode.ai/docs/provider",
+      "keysUrl": "https://commandcode.ai/settings/keys"
+    },
+    {
+      "id": "together",
+      "name": "Together AI",
+      "icon": "together-color",
+      "kind": "relay",
+      "chat": "https://api.together.xyz/v1",
+      "catalog": "togetherai",
+      "website": "https://api.together.ai",
+      "keysUrl": "https://api.together.ai/settings/api-keys"
+    },
+    {
+      "id": "fireworks",
+      "name": "Fireworks",
+      "icon": "fireworks-color",
+      "kind": "relay",
+      "chat": "https://api.fireworks.ai/inference/v1",
+      "catalog": "fireworks-ai",
+      "website": "https://fireworks.ai",
+      "keysUrl": "https://app.fireworks.ai/settings/users/api-keys"
+    },
+    {
+      "id": "siliconflow",
+      "name": "SiliconFlow",
+      "icon": "siliconcloud-color",
+      "kind": "relay",
+      "chat": "https://api.siliconflow.cn/v1",
+      "catalog": "siliconflow",
+      "website": "https://cloud.siliconflow.cn",
+      "keysUrl": "https://cloud.siliconflow.cn/account/ak",
+      "keyPlans": true,
+      "regions": [
+        {
+          "id": "cn",
+          "name": "China",
+          "chat": "https://api.siliconflow.cn/v1"
+        },
+        {
+          "id": "intl",
+          "name": "Global",
+          "chat": "https://api.siliconflow.com/v1",
+          "website": "https://cloud.siliconflow.com",
+          "keysUrl": "https://cloud.siliconflow.com/account/ak"
+        }
+      ]
+    },
+    {
+      "id": "nvidia",
+      "name": "NVIDIA NIM",
+      "icon": "nvidia-color",
+      "kind": "relay",
+      "chat": "https://integrate.api.nvidia.com/v1",
+      "catalog": "nvidia",
+      "website": "https://build.nvidia.com",
+      "keysUrl": "https://build.nvidia.com/settings/api-keys"
+    },
+    {
+      "id": "modelscope",
+      "name": "ModelScope",
+      "icon": "modelscope-color",
+      "kind": "relay",
+      "chat": "https://api-inference.modelscope.cn/v1",
+      "responses": "https://api-inference.modelscope.cn/v1",
+      "catalog": "modelscope",
+      "website": "https://modelscope.cn/docs/model-service/API-Inference/intro",
+      "keysUrl": "https://modelscope.cn/my/myaccesstoken",
+      "note": "魔搭 · API-Inference"
+    },
+    {
+      "id": "aihubmix",
+      "name": "AiHubMix",
+      "icon": "aihubmix-color",
+      "kind": "relay",
+      "chat": "https://aihubmix.com/v1",
+      "anthropic": "https://aihubmix.com",
+      "website": "https://aihubmix.com",
+      "keysUrl": "https://console.aihubmix.com/token"
+    },
+    {
+      "id": "pipellm",
+      "name": "PipeLLM",
+      "icon": "pipellm-color",
+      "kind": "relay",
+      "chat": "https://api.pipellm.ai/openai/v1",
+      "responses": "https://api.pipellm.ai/v1",
+      "anthropic": "https://api.pipellm.ai",
+      "website": "https://www.pipellm.ai",
+      "keysUrl": "https://console.pipellm.ai"
+    },
+    {
+      "id": "302ai",
+      "name": "302.AI",
+      "icon": "ai302-color",
+      "kind": "relay",
+      "chat": "https://api.302.ai/v1",
+      "anthropic": "https://api.302.ai",
+      "website": "https://302.ai",
+      "keysUrl": "https://302.ai/api-keys/list"
+    },
+    {
+      "id": "cherryin",
+      "name": "CherryIN",
+      "icon": "cherryin-color",
+      "kind": "relay",
+      "chat": "https://open.cherryin.ai/v1",
+      "responses": "https://open.cherryin.ai/v1",
+      "anthropic": "https://open.cherryin.ai",
+      "website": "https://open.cherryin.ai",
+      "keysUrl": "https://open.cherryin.ai/console/token"
+    },
+    {
+      "id": "yylx",
+      "name": "鱼鱼连线",
+      "icon": "yylx",
+      "kind": "relay",
+      "chat": "https://app.yylx.io/v1",
+      "anthropic": "https://app.yylx.io",
+      "website": "https://yylx.io",
+      "keysUrl": "https://app.yylx.io/keys",
+      "regions": [
+        {
+          "id": "auto",
+          "name": "Auto",
+          "chat": "https://app.yylx.io/v1",
+          "anthropic": "https://app.yylx.io"
+        },
+        {
+          "id": "global",
+          "name": "Global",
+          "chat": "https://global.yylx.io/v1",
+          "anthropic": "https://global.yylx.io"
+        },
+        {
+          "id": "cn",
+          "name": "China Mainland",
+          "chat": "https://cn.yylx.io/v1",
+          "anthropic": "https://cn.yylx.io"
+        }
+      ]
+    },
+    {
+      "id": "typesafe",
+      "name": "TypeSafe Jev",
+      "icon": "typesafe",
+      "kind": "vendor",
+      "decide": "https://api.typesafe.ai/v1",
+      "website": "https://typesafe.ai",
+      "keysUrl": "https://console.typesafe.ai/keys",
+      "note": "routes groups · picks model and effort"
+    },
+    {
+      "id": "vercel-jev",
+      "name": "Jev · Vercel AI Gateway",
+      "icon": "vercel",
+      "kind": "relay",
+      "decide": "https://ai-gateway.vercel.sh/typesafe",
+      "website": "https://vercel.com/ai-gateway/models/jev",
+      "keysUrl": "https://vercel.com/d?to=%2F%5Bteam%5D%2F%7E%2Fai-gateway%2Fapi-keys",
+      "note": "routes groups · picks model and effort"
+    },
+    {
+      "id": "cloudflare-jev",
+      "name": "Cloudflare Workers AI · Jev, Clef",
+      "icon": "cloudflare-color",
+      "kind": "relay",
+      "decide": "https://api.cloudflare.com/client/v4",
+      "website": "https://developers.cloudflare.com/ai/models/typesafe/jev/",
+      "keysUrl": "https://dash.cloudflare.com/profile/api-tokens",
+      "note": "routes groups · picks model and effort"
+    },
+    {
+      "id": "bailian-decision",
+      "name": "Bailian Decision Model",
+      "short": "Bailian Decision",
+      "icon": "bailian-color",
+      "kind": "vendor",
+      "decide": "https://{WorkspaceId}.cn-beijing.maas.aliyuncs.com/compatible-mode/v1",
+      "note": "routes groups · picks model and effort",
+      "regionLabel": "Plan",
+      "regions": [
+        {
+          "id": "cn-beijing",
+          "name": "Workspace · Beijing",
+          "decide": "https://{WorkspaceId}.cn-beijing.maas.aliyuncs.com/compatible-mode/v1"
+        },
+        {
+          "id": "ap-southeast-1",
+          "name": "Workspace · Singapore",
+          "decide": "https://{WorkspaceId}.ap-southeast-1.maas.aliyuncs.com/compatible-mode/v1",
+          "keysUrl": "https://modelstudio.console.alibabacloud.com/?tab=playground#/api-key"
+        },
+        {
+          "id": "token-plan",
+          "name": "Token Plan · Beijing",
+          "decide": "https://token-plan.cn-beijing.maas.aliyuncs.com/compatible-mode/v1",
+          "keysUrl": "https://bailian.console.aliyun.com/cn-beijing/subscription/token-plan/personal"
+        }
+      ]
+    },
+    {
+      "id": "qwen-decision",
+      "name": "Qwen Decision Model",
+      "short": "Qwen Decision",
+      "icon": "qwen-color",
+      "kind": "vendor",
+      "decide": "https://maas.qianwenaiapi.com/compatible-mode/v1",
+      "website": "https://www.qianwenai.com/models/decision-model-preview",
+      "keysUrl": "https://platform.qianwenai.com/home/api-keys",
+      "note": "routes groups · picks model and effort"
+    },
+    {
+      "id": "volcengine-decision",
+      "name": "Volcengine Ark Decision",
+      "short": "Ark Decision",
+      "icon": "volcengine-color",
+      "kind": "vendor",
+      "decide": "https://ark.cn-beijing.volces.com/api/v1",
+      "website": "https://www.volcengine.com/product/ark",
+      "keysUrl": "https://ark.volcengine.com/region:cn-beijing/apikey",
+      "note": "routes groups · picks model and effort"
+    },
+    {
+      "id": "ollama",
+      "name": "Ollama",
+      "icon": "ollama",
+      "kind": "local",
+      "chat": "http://localhost:11434/v1",
+      "anthropic": "http://localhost:11434",
+      "decide": "http://localhost:11434/v1",
+      "website": "https://ollama.com",
+      "note": "your local models",
+      "noKey": true
+    },
+    {
+      "id": "lmstudio",
+      "name": "LM Studio",
+      "icon": "lmstudio",
+      "kind": "local",
+      "chat": "http://localhost:1234/v1",
+      "website": "https://lmstudio.ai",
+      "note": "local server, port 1234 by default",
+      "noKey": true
+    },
+    {
+      "id": "omlx",
+      "name": "oMLX",
+      "icon": "omlx",
+      "kind": "local",
+      "chat": "http://localhost:8000/v1",
+      "responses": "http://localhost:8000/v1",
+      "anthropic": "http://localhost:8000",
+      "decide": "http://localhost:8000/v1",
+      "website": "https://omlx.ai",
+      "note": "local server, port 8000 by default",
+      "noKey": true
+    },
+    {
+      "id": "mlx-serve",
+      "name": "MLX-Serve",
+      "icon": "mlx-serve",
+      "kind": "local",
+      "chat": "http://localhost:11234/v1",
+      "responses": "http://localhost:11234/v1",
+      "anthropic": "http://localhost:11234",
+      "decide": "http://localhost:11234/v1",
+      "website": "https://github.com/ddalcu/mlx-serve",
+      "note": "local server, port 11234 by default",
+      "noKey": true
+    },
+    {
+      "id": "remote-magpie",
+      "name": "Remote magpie",
+      "icon": "magpie",
+      "kind": "remote",
+      "note": "another computer's magpie, shared on its network",
+      "endpoint": "http://192.168.1.20:3425",
+      "endpointHint": "The address and API key the other computer's magpie shows in Settings → Network and sharing, under Share on local network. Its models and routing groups are listed here; each request goes on in the API the agent spoke.",
+      "endpointNeeded": "The other magpie's address is needed"
+    },
+    {
+      "id": "kimi",
+      "name": "Kimi Code",
+      "regionLabel": "Plan",
+      "regions": [
+        {
+          "id": "cn",
+          "name": "China",
+          "chat": "https://api.kimi.com/coding/v1",
+          "anthropic": "https://api.kimi.com/coding",
+          "catalog": "kimi-code-plan-cn",
+          "keysUrl": "https://usemagpie.ai/go/kimi/keys/cn",
+          "website": "https://usemagpie.ai/go/kimi/site/cn",
+          "siteHost": "www.kimi.com"
+        },
+        {
+          "id": "global",
+          "name": "Global",
+          "chat": "https://api.kimi.ai/coding/v1",
+          "anthropic": "https://api.kimi.ai/coding",
+          "catalog": "kimi-code-plan-global",
+          "keysUrl": "https://usemagpie.ai/go/kimi/keys/global",
+          "website": "https://usemagpie.ai/go/kimi/site/global",
+          "siteHost": "www.kimi.ai"
+        },
+        {
+          "id": "api-cn",
+          "name": "Pay as you go · China",
+          "chat": "https://api.moonshot.cn/v1",
+          "anthropic": "https://api.moonshot.cn/anthropic",
+          "catalog": "moonshotai",
+          "keysUrl": "https://usemagpie.ai/go/kimi/keys/api-cn",
+          "website": "https://usemagpie.ai/go/kimi/site/api-cn",
+          "siteHost": "platform.kimi.com"
+        },
+        {
+          "id": "api",
+          "name": "Pay as you go · Global",
+          "chat": "https://api.moonshot.ai/v1",
+          "anthropic": "https://api.moonshot.ai/anthropic",
+          "catalog": "moonshotai",
+          "keysUrl": "https://usemagpie.ai/go/kimi/keys/api",
+          "website": "https://usemagpie.ai/go/kimi/site/api",
+          "siteHost": "platform.kimi.ai"
+        }
+      ],
+      "catalog": "kimi-code-plan-cn",
+      "keysUrl": "https://usemagpie.ai/go/kimi/keys",
+      "website": "https://usemagpie.ai/go/kimi/site",
+      "iconUrl": "https://usemagpie.ai/img/partner-kimi.png",
+      "notes": {
+        "en": "One subscription, one K3 quota shared by every agent",
+        "zh": "一份订阅，所有 agent 共享 K3 额度",
+        "zh-TW": "一份訂閱，所有 agent 共享 K3 額度",
+        "ja": "1つのサブスクリプションで、すべての agent が K3 の枠を共有",
+        "de": "Ein Abo, ein K3-Kontingent für alle Agents"
+      },
+      "from": "2026-10-23T00:00:00+08:00",
+      "siteHost": "www.kimi.com",
+      "kind": "partner",
+      "sponsored": true,
+      "note": "一份订阅，所有 agent 共享 K3 额度"
+    },
+    {
+      "id": "apikeyfan",
+      "name": "APIKEY.FAN",
+      "regions": [
+        {
+          "id": "main",
+          "name": "Default",
+          "chat": "https://api.apikey.fan/v1",
+          "responses": "https://api.apikey.fan/v1",
+          "anthropic": "https://api.apikey.fan"
+        },
+        {
+          "id": "slb",
+          "name": "Direct",
+          "chat": "https://slb.apikey.fan/v1",
+          "responses": "https://slb.apikey.fan/v1",
+          "anthropic": "https://slb.apikey.fan"
+        }
+      ],
+      "chat": "https://api.apikey.fan/v1",
+      "responses": "https://api.apikey.fan/v1",
+      "anthropic": "https://api.apikey.fan",
+      "keysUrl": "https://usemagpie.ai/go/apikeyfan/keys",
+      "website": "https://usemagpie.ai/go/apikeyfan/site",
+      "iconUrl": "https://usemagpie.ai/img/partner-apikeyfan.png",
+      "notes": {
+        "en": "Enterprise-grade AI API gateway to the world's leading models",
+        "zh": "企业级 AI 中转站，连接全球主流大模型",
+        "zh-TW": "企業級 AI 中轉站，連接全球主流大模型"
+      },
+      "langs": [
+        "zh",
+        "en"
+      ],
+      "from": "2026-10-24T00:00:00+08:00",
+      "until": "2026-11-24T00:00:00+08:00",
+      "siteHost": "apikey.fan",
+      "kind": "partner",
+      "sponsored": true,
+      "note": "企业级 AI 中转站，连接全球主流大模型"
+    },
+    {
+      "id": "wandapi",
+      "name": "WandAPI",
+      "chat": "https://api.wandapi.ai/v1",
+      "responses": "https://api.wandapi.ai/v1",
+      "anthropic": "https://api.wandapi.ai",
+      "keysUrl": "https://usemagpie.ai/go/wandapi/keys",
+      "website": "https://usemagpie.ai/go/wandapi/site",
+      "iconUrl": "https://usemagpie.ai/img/partner-wandapi.png",
+      "notes": {
+        "en": "Enterprise-grade AI gateway, seamless access to global AI models",
+        "zh": "企业级 AI 网关，畅连全球 AI 大模型",
+        "zh-TW": "企業級 AI 閘道，暢連全球 AI 大模型"
+      },
+      "from": "2026-10-25T00:00:00+08:00",
+      "until": "2026-11-25T00:00:00+08:00",
+      "siteHost": "wandapi.ai",
+      "kind": "partner",
+      "sponsored": true,
+      "note": "企业级 AI 网关，畅连全球 AI 大模型"
+    },
+    {
+      "id": "corecode",
+      "name": "CoreCode",
+      "chat": "https://corecode.live/v1",
+      "responses": "https://corecode.live/v1",
+      "anthropic": "https://corecode.live",
+      "keysUrl": "https://usemagpie.ai/go/corecode/keys",
+      "website": "https://usemagpie.ai/go/corecode/site",
+      "iconUrl": "https://usemagpie.ai/img/partner-corecode.png",
+      "notes": {
+        "en": "Full-strength Claude. Low prices. Enterprise-grade caching. Invoices available. Sign up for magpie and get $3 free.",
+        "zh": "满血 Claude，超低折扣，企业级缓存优化，可开票。magpie 用户注册送 $3。",
+        "zh-TW": "滿血 Claude，超低折扣，企業級快取優化，可開票。magpie 用戶註冊送 $3。"
+      },
+      "from": "2026-10-26T00:00:00+08:00",
+      "until": "2026-11-26T00:00:00+08:00",
+      "siteHost": "corecode.live",
+      "kind": "partner",
+      "sponsored": true,
+      "note": "满血 Claude，超低折扣，企业级缓存优化，可开票。magpie 用户注册送 $3。"
+    },
+    {
+      "id": "sidrune",
+      "name": "Sidrune AI",
+      "regions": [
+        {
+          "id": "cn",
+          "name": "China",
+          "chat": "https://sidrune.ai/v1",
+          "responses": "https://sidrune.ai/v1",
+          "anthropic": "https://sidrune.ai",
+          "keysUrl": "https://usemagpie.ai/go/sidrune/keys/cn",
+          "website": "https://usemagpie.ai/go/sidrune/site/cn",
+          "siteHost": "sidrune.ai"
+        },
+        {
+          "id": "global",
+          "name": "Global",
+          "chat": "https://global.sidrune.ai/v1",
+          "responses": "https://global.sidrune.ai/v1",
+          "anthropic": "https://global.sidrune.ai",
+          "keysUrl": "https://usemagpie.ai/go/sidrune/keys/global",
+          "website": "https://usemagpie.ai/go/sidrune/site/global",
+          "siteHost": "global.sidrune.ai"
+        }
+      ],
+      "keysUrl": "https://usemagpie.ai/go/sidrune/keys",
+      "website": "https://usemagpie.ai/go/sidrune/site",
+      "iconUrl": "https://usemagpie.ai/img/partner-sidrune.png",
+      "notes": {
+        "en": "Stable Claude API Access with 85% off; $3 free credit upon registration",
+        "zh": "低至1.5折，稳定使用满血Claude；注册送$3，可开发票。",
+        "zh-TW": "低至1.5折，穩定使用滿血Claude；註冊送$3，可開發票。"
+      },
+      "langs": [
+        "zh",
+        "en"
+      ],
+      "from": "2026-10-26T00:00:00+08:00",
+      "until": "2026-11-26T00:00:00+08:00",
+      "siteHost": "sidrune.ai",
+      "kind": "partner",
+      "sponsored": true,
+      "note": "低至1.5折，稳定使用满血Claude；注册送$3，可开发票。"
+    },
+    {
+      "id": "fastai",
+      "name": "FastAIToken",
+      "chat": "https://www.fastaitoken.com/v1",
+      "responses": "https://www.fastaitoken.com/v1",
+      "anthropic": "https://www.fastaitoken.com",
+      "keysUrl": "https://usemagpie.ai/go/fastai/keys",
+      "website": "https://usemagpie.ai/go/fastai/site",
+      "iconUrl": "https://usemagpie.ai/img/partner-fastai.png",
+      "notes": {
+        "en": "One-stop access to Claude, GPT and DeepSeek, from 6% of list price",
+        "zh": "Claude / GPT / Deepseek 一站式接入方案，最低0.6折，支持对公",
+        "zh-TW": "Claude / GPT / Deepseek 一站式接入方案，最低0.6折，支援對公"
+      },
+      "from": "2026-10-26T00:00:00+08:00",
+      "until": "2026-11-26T00:00:00+08:00",
+      "siteHost": "www.fastaitoken.com",
+      "kind": "partner",
+      "sponsored": true,
+      "note": "Claude / GPT / Deepseek 一站式接入方案，最低0.6折，支持对公"
+    }
+  ]
+}
