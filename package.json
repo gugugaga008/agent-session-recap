@@ -5,7 +5,7 @@
   "description": "Read-only browser, time-filter and exporter for AI coding-agent sessions",
   "type": "module",
   "license": "MIT",
-  "author": "Wukaixong",
+  "author": "gugugaga008",
   "bin": {
     "agent-session-recap": "bin/agent-session-recap.mjs"
   },

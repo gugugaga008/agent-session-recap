@@ -8,6 +8,22 @@
 
 零依赖、无构建步骤，需要 Node.js 18+。
 
+## 截图
+
+> 截图均使用**合成数据**（由 `scripts/make-demo.mjs` 生成），不含任何真实会话、路径或用户名。
+
+**总览：浏览、飞书式筛选、表头排序、列宽拖拽、快捷导出**
+
+![总览](docs/screenshots/overview.png)
+
+**飞书式筛选条件构建器：字段可搜索、带类型图标、支持「且 / 或」**
+
+![筛选](docs/screenshots/filter.png)
+
+**一键导出：确认弹框 + 本机原生目录选择**
+
+![确认导出](docs/screenshots/export-confirm.png)
+
 ## 快速开始
 
 ```bash
@@ -129,4 +145,4 @@ agent-session-recap/
 
 ## 许可证
 
-[MIT](LICENSE) © 2026 Wukaixong
+[MIT](LICENSE) © 2026 gugugaga008
