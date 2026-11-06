@@ -1,0 +1,17 @@
+{
+  "name": "pi-sessions",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Read-only browser, time-filter and exporter for pi coding-agent sessions",
+  "type": "module",
+  "bin": {
+    "pi-sessions": "bin/pi-sessions.mjs"
+  },
+  "scripts": {
+    "list": "node bin/pi-sessions.mjs list",
+    "web": "node bin/pi-sessions.mjs web"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}

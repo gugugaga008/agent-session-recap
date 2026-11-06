@@ -1,0 +1,122 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>pi-sessions 会话浏览器</title>
+<link rel="stylesheet" href="/style.css">
+</head>
+<body>
+<header>
+  <h1>pi-sessions <span class="sub">只读会话浏览器</span></h1>
+  <div class="src" id="sessionsDir"></div>
+</header>
+
+<!-- 飞书式筛选器 -->
+<section class="fb">
+  <div class="fb-head">
+    <span class="fb-title">设置筛选条件</span>
+    <label class="fb-logic">条件关系
+      <select id="logic">
+        <option value="and">满足全部（且）</option>
+        <option value="or">满足任一（或）</option>
+      </select>
+    </label>
+  </div>
+  <div id="conditions" class="conditions"></div>
+  <div class="fb-foot">
+    <button id="addCond">＋ 添加条件</button>
+    <button id="clearCond">清空条件</button>
+    <span class="spacer"></span>
+    <button id="apply" class="primary">应用筛选</button>
+  </div>
+</section>
+
+<!-- 快捷导出 -->
+<section class="quick">
+  <span class="quick-label">快捷导出：</span>
+  <label class="quick-field">时间依据
+    <select id="quickField">
+      <option value="lastActivity">最后活动时间</option>
+      <option value="lastMessage">最后一条消息时间</option>
+      <option value="created">创建时间</option>
+      <option value="mtime">文件更新时间</option>
+    </select>
+  </label>
+  <button data-quick="yesterday">导出昨天</button>
+  <button data-quick="today">导出今天</button>
+  <button data-quick="thisWeek">导出这周</button>
+  <button data-quick="lastWeek">导出上周</button>
+  <button data-quick="thisMonth">导出这个月</button>
+  <button data-quick="lastMonth">导出上个月</button>
+</section>
+
+<section class="bar">
+  <div id="stats" class="stats">—</div>
+  <div class="bar-right">
+    <button id="selectAll">全选</button>
+    <button id="selectNone">全不选</button>
+  </div>
+</section>
+
+<section class="table-wrap">
+  <table id="table">
+    <colgroup id="cols"></colgroup>
+    <thead>
+      <tr>
+        <th class="pick"><input type="checkbox" id="headPick"></th>
+        <th data-key="cwd">工作目录</th>
+        <th data-key="displayName">会话名称</th>
+        <th data-key="id">会话 ID</th>
+        <th data-key="created">创建时间</th>
+        <th data-key="lastMessage">最后消息</th>
+        <th data-key="lastActivity">最后活动</th>
+        <th data-key="mtime">文件更新时间</th>
+        <th data-key="size" class="num">大小</th>
+        <th data-key="archived">归档</th>
+      </tr>
+    </thead>
+    <tbody id="rows"></tbody>
+  </table>
+</section>
+
+<section class="export">
+  <label>导出格式
+    <select id="format">
+      <option value="jsonl">JSONL（原样复制）</option>
+      <option value="md">Markdown</option>
+      <option value="html">HTML</option>
+    </select>
+  </label>
+  <label class="grow">导出到
+    <input type="text" id="outDir">
+  </label>
+  <button id="pickDir">选择目录…</button>
+  <button id="export" class="primary">导出所选</button>
+</section>
+
+<div id="status" class="status"></div>
+
+<!-- 确认导出弹框 -->
+<div id="modal" class="modal-backdrop hidden">
+  <div class="modal">
+    <h2 id="modalTitle">确认导出</h2>
+    <div class="modal-body">
+      <p id="modalSummary"></p>
+      <label class="modal-dir">导出目录
+        <span class="dir-row">
+          <input type="text" id="modalOutDir">
+          <button id="modalPickDir">选择…</button>
+        </span>
+      </label>
+    </div>
+    <div class="modal-foot">
+      <button id="modalCancel">取消</button>
+      <button id="modalConfirm" class="primary">确认导出</button>
+    </div>
+  </div>
+</div>
+
+<script src="/app.js"></script>
+</body>
+</html>

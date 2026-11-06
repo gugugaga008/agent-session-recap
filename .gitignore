@@ -1,0 +1,16 @@
+# 依赖（本项目零依赖，但以防万一）
+node_modules/
+
+# 本工具运行时产物（缓存 / 导出 / 清单）
+.cache/
+*.log
+
+# 导出结果与清单（如误放在项目内）
+pi-sessions-*/
+manifest.json
+
+# 编辑器 / 系统
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
