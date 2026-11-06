@@ -4,6 +4,8 @@
   "private": true,
   "description": "Read-only browser, time-filter and exporter for pi coding-agent sessions",
   "type": "module",
+  "license": "MIT",
+  "author": "Wukaixong",
   "bin": {
     "pi-sessions": "bin/pi-sessions.mjs"
   },
