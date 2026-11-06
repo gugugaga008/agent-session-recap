@@ -1,7 +1,7 @@
 // AI features: summarize one session, summarize a filtered batch, and ask
-// questions across a filtered batch. The provider/endpoint shapes are
-// magpie's (OpenAI chat, OpenAI Responses, Anthropic messages, Gemini), so a
-// provider added in the same shape works here.
+// questions across a filtered batch. Four endpoint shapes are spoken —
+// OpenAI chat completions, OpenAI Responses, Anthropic messages, Gemini — so
+// any provider offering one of them works here.
 import { parseFull } from "./parser.mjs";
 import { formatLocal } from "./time.mjs";
 import { callTargets, getProvider } from "./providers.mjs";

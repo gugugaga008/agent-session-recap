@@ -1,6 +1,6 @@
 // Model metadata — context window, max output, reasoning, image input.
 //
-// Two upstream sources are used, the same ones magpie leans on:
+// Two upstream sources are used:
 //   1. models.dev (https://models.dev/api.json) — a catalog of every vendor's
 //      models; cached on disk for a day.
 //   2. the provider's own /models response, when it carries the fields
@@ -134,8 +134,8 @@ function indexOf(catalog) {
 }
 
 /**
- * Find a model's metadata. `catalogIds` is the provider's magpie catalog id
- * list ("deepseek", "alibaba", or several, comma-separated); exact matches
+ * Find a model's metadata. `catalogIds` is the provider's catalog id list
+ * ("deepseek", "alibaba", or several, comma-separated); exact matches
  * there win, then a `vendor/model` prefix, then a global search.
  */
 export function lookupModel(catalog, catalogIds, modelId) {

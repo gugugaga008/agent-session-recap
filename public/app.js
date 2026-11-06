@@ -4,6 +4,7 @@ const $ = (id) => document.getElementById(id);
 
 let allSessions = []; // 服务端返回的全部会话
 let sessions = []; // 当前筛选后的会话
+let scannedCount = 0; // 本次扫描到的会话总数
 let conditions = []; // 筛选条件
 let condSeq = 1;
 let sortKey = null;
@@ -91,7 +92,7 @@ function setStatus(msg, kind) {
   el.className = "status" + (kind ? " " + kind : "");
 }
 
-// ---- 自定义下拉（飞书式） ----
+// ---- 自定义下拉（带搜索、类型图标） ----
 let activeDD = null;
 function closeDropdown() {
   if (activeDD) {
@@ -376,7 +377,8 @@ function applyConditions(list) {
 }
 
 // ---- 列宽 ----
-const DEFAULT_COLS = [40, 300, 240, 130, 170, 170, 170, 170, 90, 70, 64];
+// 列宽默认值：合计 ~1406px，在 1440 宽的屏幕上不用横向滚动
+const DEFAULT_COLS = [40, 250, 210, 110, 150, 150, 150, 150, 76, 56, 64];
 const STORAGE_KEY = "agent-session-recap-col-widths";
 let colWidths = DEFAULT_COLS.slice();
 
@@ -495,12 +497,22 @@ async function apply() {
   setStatus("正在扫描…");
   try {
     const data = await fetchAll();
+    scannedCount = data.scanned;
     sessions = applyConditions(allSessions);
     renderRows();
+    renderStats();
     setStatus(`已扫描 ${data.scanned} 个会话 · 匹配 ${sessions.length} 个`);
   } catch (e) {
     setStatus("错误：" + e.message, "err");
   }
+}
+
+/** 工具栏左侧的计数：已扫描 / 匹配 / 已选 */
+function renderStats() {
+  const picked = document.querySelectorAll("#rows .rowpick:checked").length;
+  const parts = [`已扫描 ${scannedCount} 个会话`, `匹配 ${sessions.length} 个`];
+  if (picked) parts.push(`已选 ${picked} 个`);
+  $("stats").textContent = parts.join(" · ");
 }
 function renderRows() {
   const tbody = $("rows");
@@ -525,6 +537,7 @@ function renderRows() {
     tr.querySelector(".row-ai").addEventListener("click", () => aiSummarizeSingle(s));
   }
   $("headPick").checked = false;
+  renderStats();
 }
 function selectedIds() {
   return [...document.querySelectorAll("#rows tr")]
@@ -676,13 +689,19 @@ $("apply").addEventListener("click", apply);
 $("logic").addEventListener("change", apply);
 $("selectAll").addEventListener("click", () => {
   document.querySelectorAll(".rowpick").forEach((c) => (c.checked = true));
+  renderStats();
 });
 $("selectNone").addEventListener("click", () => {
   document.querySelectorAll(".rowpick").forEach((c) => (c.checked = false));
   $("headPick").checked = false;
+  renderStats();
 });
 $("headPick").addEventListener("change", (e) => {
   document.querySelectorAll(".rowpick").forEach((c) => (c.checked = e.target.checked));
+  renderStats();
+});
+$("rows").addEventListener("change", (e) => {
+  if (e.target.classList.contains("rowpick")) renderStats();
 });
 $("pickDir").addEventListener("click", () => pickDirInto($("outDir")));
 $("export").addEventListener("click", () => {

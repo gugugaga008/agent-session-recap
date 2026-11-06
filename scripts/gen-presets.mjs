@@ -389,16 +389,44 @@ async function fetchPartners() {
     });
     if (!res.ok) throw new Error("HTTP " + res.status);
     const data = await res.json();
-    return (data.partners || []).map((p) => ({
-      ...p,
-      kind: "partner",
-      sponsored: true,
-      note: p.notes ? p.notes.zh || p.notes.en || "" : "",
-    }));
+    return (data.partners || []).map((p) => {
+      const out = {
+        ...p,
+        kind: "partner",
+        sponsored: true,
+        note: p.notes ? p.notes.zh || p.notes.en || "" : "",
+      };
+      // 只保留厂商自己的地址：去掉中转跳转与外部图床，图标用内置字母徽标
+      out.website = vendorSite(p) || out.website;
+      out.keysUrl = vendorSite(p) || "";
+      delete out.iconUrl;
+      // 图标用内置徽标（颜色由 id 推导），不用外部图床
+      out.icon = out.icon || p.id;
+      delete out.notes;
+      delete out.langs;
+      delete out.from;
+      delete out.until;
+      if (Array.isArray(out.regions)) {
+        out.regions = out.regions.map((r) => {
+          const rr = { ...r };
+          rr.website = vendorSite(p, r) || rr.website;
+          rr.keysUrl = vendorSite(p, r) || "";
+          delete rr.iconUrl;
+          return rr;
+        });
+      }
+      return out;
+    });
   } catch (e) {
     console.error("partners fetch failed:", e.message);
     return [];
   }
+}
+
+/** 合作伙伴自己的站点（优先用区域自带的 siteHost，否则用总站的）。 */
+function vendorSite(p, region) {
+  const host = (region && region.siteHost) || p.siteHost;
+  return host ? "https://" + String(host).replace(/^https?:\/\//, "") : "";
 }
 
 const source = fs.readFileSync(PRESETS_GO, "utf8");

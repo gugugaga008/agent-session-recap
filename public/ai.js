@@ -1,8 +1,8 @@
 "use strict";
 
 /* =======================================================================
- * AI 与供应商 —— 供应商模块的设计、数据形状与「添加供应商」交互参照 magpie
- * 项目（https://github.com/yetone/magpie）。
+ * AI 与供应商 —— providers.json 的数据形状与主流供应商管理工具一致
+ * （chat / responses / anthropic / gemini / key / models）。
  * ===================================================================== */
 
 const CONFIG_HINT = "~/.config/agent-session-recap/providers.json";
@@ -586,7 +586,7 @@ function provRow(p) {
   return row;
 }
 
-// ---- 添加供应商（magpie 式：先选预设卡片，或自定义 URL） ----
+// ---- 添加供应商（先选预设卡片，或填自定义 URL） ----
 function openAddProvider(provider) {
   if (provider) {
     openProviderForm({ provider });

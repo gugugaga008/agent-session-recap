@@ -1435,8 +1435,8 @@
           "chat": "https://api.kimi.com/coding/v1",
           "anthropic": "https://api.kimi.com/coding",
           "catalog": "kimi-code-plan-cn",
-          "keysUrl": "https://usemagpie.ai/go/kimi/keys/cn",
-          "website": "https://usemagpie.ai/go/kimi/site/cn",
+          "keysUrl": "https://www.kimi.com",
+          "website": "https://www.kimi.com",
           "siteHost": "www.kimi.com"
         },
         {
@@ -1445,8 +1445,8 @@
           "chat": "https://api.kimi.ai/coding/v1",
           "anthropic": "https://api.kimi.ai/coding",
           "catalog": "kimi-code-plan-global",
-          "keysUrl": "https://usemagpie.ai/go/kimi/keys/global",
-          "website": "https://usemagpie.ai/go/kimi/site/global",
+          "keysUrl": "https://www.kimi.ai",
+          "website": "https://www.kimi.ai",
           "siteHost": "www.kimi.ai"
         },
         {
@@ -1455,8 +1455,8 @@
           "chat": "https://api.moonshot.cn/v1",
           "anthropic": "https://api.moonshot.cn/anthropic",
           "catalog": "moonshotai",
-          "keysUrl": "https://usemagpie.ai/go/kimi/keys/api-cn",
-          "website": "https://usemagpie.ai/go/kimi/site/api-cn",
+          "keysUrl": "https://platform.kimi.com",
+          "website": "https://platform.kimi.com",
           "siteHost": "platform.kimi.com"
         },
         {
@@ -1465,27 +1465,19 @@
           "chat": "https://api.moonshot.ai/v1",
           "anthropic": "https://api.moonshot.ai/anthropic",
           "catalog": "moonshotai",
-          "keysUrl": "https://usemagpie.ai/go/kimi/keys/api",
-          "website": "https://usemagpie.ai/go/kimi/site/api",
+          "keysUrl": "https://platform.kimi.ai",
+          "website": "https://platform.kimi.ai",
           "siteHost": "platform.kimi.ai"
         }
       ],
       "catalog": "kimi-code-plan-cn",
-      "keysUrl": "https://usemagpie.ai/go/kimi/keys",
-      "website": "https://usemagpie.ai/go/kimi/site",
-      "iconUrl": "https://usemagpie.ai/img/partner-kimi.png",
-      "notes": {
-        "en": "One subscription, one K3 quota shared by every agent",
-        "zh": "一份订阅，所有 agent 共享 K3 额度",
-        "zh-TW": "一份訂閱，所有 agent 共享 K3 額度",
-        "ja": "1つのサブスクリプションで、すべての agent が K3 の枠を共有",
-        "de": "Ein Abo, ein K3-Kontingent für alle Agents"
-      },
-      "from": "2026-10-23T00:00:00+08:00",
+      "keysUrl": "https://www.kimi.com",
+      "website": "https://www.kimi.com",
       "siteHost": "www.kimi.com",
       "kind": "partner",
       "sponsored": true,
-      "note": "一份订阅，所有 agent 共享 K3 额度"
+      "note": "一份订阅，所有 agent 共享 K3 额度",
+      "icon": "kimi"
     },
     {
       "id": "apikeyfan",
@@ -1496,37 +1488,30 @@
           "name": "Default",
           "chat": "https://api.apikey.fan/v1",
           "responses": "https://api.apikey.fan/v1",
-          "anthropic": "https://api.apikey.fan"
+          "anthropic": "https://api.apikey.fan",
+          "website": "https://apikey.fan",
+          "keysUrl": "https://apikey.fan"
         },
         {
           "id": "slb",
           "name": "Direct",
           "chat": "https://slb.apikey.fan/v1",
           "responses": "https://slb.apikey.fan/v1",
-          "anthropic": "https://slb.apikey.fan"
+          "anthropic": "https://slb.apikey.fan",
+          "website": "https://apikey.fan",
+          "keysUrl": "https://apikey.fan"
         }
       ],
       "chat": "https://api.apikey.fan/v1",
       "responses": "https://api.apikey.fan/v1",
       "anthropic": "https://api.apikey.fan",
-      "keysUrl": "https://usemagpie.ai/go/apikeyfan/keys",
-      "website": "https://usemagpie.ai/go/apikeyfan/site",
-      "iconUrl": "https://usemagpie.ai/img/partner-apikeyfan.png",
-      "notes": {
-        "en": "Enterprise-grade AI API gateway to the world's leading models",
-        "zh": "企业级 AI 中转站，连接全球主流大模型",
-        "zh-TW": "企業級 AI 中轉站，連接全球主流大模型"
-      },
-      "langs": [
-        "zh",
-        "en"
-      ],
-      "from": "2026-10-24T00:00:00+08:00",
-      "until": "2026-11-24T00:00:00+08:00",
+      "keysUrl": "https://apikey.fan",
+      "website": "https://apikey.fan",
       "siteHost": "apikey.fan",
       "kind": "partner",
       "sponsored": true,
-      "note": "企业级 AI 中转站，连接全球主流大模型"
+      "note": "企业级 AI 中转站，连接全球主流大模型",
+      "icon": "apikeyfan"
     },
     {
       "id": "wandapi",
@@ -1534,20 +1519,13 @@
       "chat": "https://api.wandapi.ai/v1",
       "responses": "https://api.wandapi.ai/v1",
       "anthropic": "https://api.wandapi.ai",
-      "keysUrl": "https://usemagpie.ai/go/wandapi/keys",
-      "website": "https://usemagpie.ai/go/wandapi/site",
-      "iconUrl": "https://usemagpie.ai/img/partner-wandapi.png",
-      "notes": {
-        "en": "Enterprise-grade AI gateway, seamless access to global AI models",
-        "zh": "企业级 AI 网关，畅连全球 AI 大模型",
-        "zh-TW": "企業級 AI 閘道，暢連全球 AI 大模型"
-      },
-      "from": "2026-10-25T00:00:00+08:00",
-      "until": "2026-11-25T00:00:00+08:00",
+      "keysUrl": "https://wandapi.ai",
+      "website": "https://wandapi.ai",
       "siteHost": "wandapi.ai",
       "kind": "partner",
       "sponsored": true,
-      "note": "企业级 AI 网关，畅连全球 AI 大模型"
+      "note": "企业级 AI 网关，畅连全球 AI 大模型",
+      "icon": "wandapi"
     },
     {
       "id": "corecode",
@@ -1555,20 +1533,13 @@
       "chat": "https://corecode.live/v1",
       "responses": "https://corecode.live/v1",
       "anthropic": "https://corecode.live",
-      "keysUrl": "https://usemagpie.ai/go/corecode/keys",
-      "website": "https://usemagpie.ai/go/corecode/site",
-      "iconUrl": "https://usemagpie.ai/img/partner-corecode.png",
-      "notes": {
-        "en": "Full-strength Claude. Low prices. Enterprise-grade caching. Invoices available. Sign up for magpie and get $3 free.",
-        "zh": "满血 Claude，超低折扣，企业级缓存优化，可开票。magpie 用户注册送 $3。",
-        "zh-TW": "滿血 Claude，超低折扣，企業級快取優化，可開票。magpie 用戶註冊送 $3。"
-      },
-      "from": "2026-10-26T00:00:00+08:00",
-      "until": "2026-11-26T00:00:00+08:00",
+      "keysUrl": "https://corecode.live",
+      "website": "https://corecode.live",
       "siteHost": "corecode.live",
       "kind": "partner",
       "sponsored": true,
-      "note": "满血 Claude，超低折扣，企业级缓存优化，可开票。magpie 用户注册送 $3。"
+      "note": "满血 Claude，超低折扣，企业级缓存优化，可开票。magpie 用户注册送 $3。",
+      "icon": "corecode"
     },
     {
       "id": "sidrune",
@@ -1580,8 +1551,8 @@
           "chat": "https://sidrune.ai/v1",
           "responses": "https://sidrune.ai/v1",
           "anthropic": "https://sidrune.ai",
-          "keysUrl": "https://usemagpie.ai/go/sidrune/keys/cn",
-          "website": "https://usemagpie.ai/go/sidrune/site/cn",
+          "keysUrl": "https://sidrune.ai",
+          "website": "https://sidrune.ai",
           "siteHost": "sidrune.ai"
         },
         {
@@ -1590,29 +1561,18 @@
           "chat": "https://global.sidrune.ai/v1",
           "responses": "https://global.sidrune.ai/v1",
           "anthropic": "https://global.sidrune.ai",
-          "keysUrl": "https://usemagpie.ai/go/sidrune/keys/global",
-          "website": "https://usemagpie.ai/go/sidrune/site/global",
+          "keysUrl": "https://global.sidrune.ai",
+          "website": "https://global.sidrune.ai",
           "siteHost": "global.sidrune.ai"
         }
       ],
-      "keysUrl": "https://usemagpie.ai/go/sidrune/keys",
-      "website": "https://usemagpie.ai/go/sidrune/site",
-      "iconUrl": "https://usemagpie.ai/img/partner-sidrune.png",
-      "notes": {
-        "en": "Stable Claude API Access with 85% off; $3 free credit upon registration",
-        "zh": "低至1.5折，稳定使用满血Claude；注册送$3，可开发票。",
-        "zh-TW": "低至1.5折，穩定使用滿血Claude；註冊送$3，可開發票。"
-      },
-      "langs": [
-        "zh",
-        "en"
-      ],
-      "from": "2026-10-26T00:00:00+08:00",
-      "until": "2026-11-26T00:00:00+08:00",
+      "keysUrl": "https://sidrune.ai",
+      "website": "https://sidrune.ai",
       "siteHost": "sidrune.ai",
       "kind": "partner",
       "sponsored": true,
-      "note": "低至1.5折，稳定使用满血Claude；注册送$3，可开发票。"
+      "note": "低至1.5折，稳定使用满血Claude；注册送$3，可开发票。",
+      "icon": "sidrune"
     },
     {
       "id": "fastai",
@@ -1620,20 +1580,13 @@
       "chat": "https://www.fastaitoken.com/v1",
       "responses": "https://www.fastaitoken.com/v1",
       "anthropic": "https://www.fastaitoken.com",
-      "keysUrl": "https://usemagpie.ai/go/fastai/keys",
-      "website": "https://usemagpie.ai/go/fastai/site",
-      "iconUrl": "https://usemagpie.ai/img/partner-fastai.png",
-      "notes": {
-        "en": "One-stop access to Claude, GPT and DeepSeek, from 6% of list price",
-        "zh": "Claude / GPT / Deepseek 一站式接入方案，最低0.6折，支持对公",
-        "zh-TW": "Claude / GPT / Deepseek 一站式接入方案，最低0.6折，支援對公"
-      },
-      "from": "2026-10-26T00:00:00+08:00",
-      "until": "2026-11-26T00:00:00+08:00",
+      "keysUrl": "https://www.fastaitoken.com",
+      "website": "https://www.fastaitoken.com",
       "siteHost": "www.fastaitoken.com",
       "kind": "partner",
       "sponsored": true,
-      "note": "Claude / GPT / Deepseek 一站式接入方案，最低0.6折，支持对公"
+      "note": "Claude / GPT / Deepseek 一站式接入方案，最低0.6折，支持对公",
+      "icon": "fastai"
     }
   ]
 }

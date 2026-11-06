@@ -43,7 +43,7 @@ function help() {
 
 AI（在 web 界面里）：
   总结单条会话 / 对筛选结果做摘要总结 / 针对筛选结果 AI 提问。
-  先在网页右上角「AI 供应商」里添加供应商（配置与 magpie 一致）。
+  先在网页右上角「AI 供应商」里添加供应商（OpenAI / Anthropic / Gemini 兼容均可）。
 
 筛选：
   --field <名称>        created(创建) | lastActivity(最后活动) | lastMessage(最后消息) | mtime(文件更新) | activity(区间内有活动)   （默认：${DEFAULT_FIELD}）

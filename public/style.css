@@ -25,7 +25,7 @@ button.primary { background: var(--accent); border-color: var(--accent); color: 
 button:hover { filter: brightness(1.05); }
 input, select { font: inherit; padding: .35rem .5rem; border: 1px solid var(--line); border-radius: 6px; background: transparent; color: inherit; }
 
-/* ===== 飞书式筛选器 ===== */
+/* ===== 筛选条件构建器 ===== */
 .fb { border: 1px solid var(--line); border-radius: 10px; padding: .7rem .8rem; margin: .9rem 0; background: var(--panel); }
 .fb-head { display: flex; align-items: center; gap: 1rem; margin-bottom: .6rem; }
 .fb-title { font-weight: 600; font-size: .9rem; }

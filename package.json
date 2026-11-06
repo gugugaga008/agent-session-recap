@@ -2,7 +2,7 @@
   "name": "agent-session-recap",
   "version": "0.1.0",
   "private": true,
-  "description": "Read-only browser, time-filter and exporter for AI coding-agent sessions",
+  "description": "Read-only browser, time-filter, exporter and AI summarizer for AI coding-agent sessions",
   "type": "module",
   "license": "MIT",
   "author": "gugugaga008",
@@ -11,7 +11,10 @@
   },
   "scripts": {
     "list": "node bin/agent-session-recap.mjs list",
-    "web": "node bin/agent-session-recap.mjs web"
+    "web": "node bin/agent-session-recap.mjs web",
+    "demo": "node scripts/make-demo.mjs",
+    "screenshots": "node scripts/shoot.mjs",
+    "presets": "node scripts/gen-presets.mjs"
   },
   "engines": {
     "node": ">=18"

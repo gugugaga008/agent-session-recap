@@ -1,6 +1,5 @@
-// AI provider management — the design and the on-disk shape are copied from
-// magpie (https://github.com/yetone/magpie), so a provider means the same
-// thing here as it does there:
+// AI provider management. A provider is one entry of providers.json, with the
+// shape mainstream provider managers use:
 //
 //   { id, name, icon, preset, key, chat, responses, anthropic, gemini,
 //     models: [], pickedFrom: [], catalog, website, keysUrl, off, noModels }
@@ -43,7 +42,7 @@ function readJsonSafe(file) {
   }
 }
 
-/** The whole store: `{ providers: [...], prefs: {...} }` (magpie's shape). */
+/** The whole store: `{ providers: [...], prefs: {...} }`. */
 export function loadStore() {
   const data = readJsonSafe(providersPath());
   const store = { providers: [], prefs: {} };
@@ -100,9 +99,9 @@ export function findPreset(id) {
   return loadPresets().find((p) => p.id === id) || null;
 }
 
-/** Presets grouped the way magpie's add sheet groups them. */
+/** Presets grouped so the add sheet lists like kinds together. */
 export const PRESET_GROUPS = [
-  { kind: "partner", label: "合作伙伴", note: "赞助 magpie 的服务" },
+  { kind: "partner", label: "合作伙伴", note: "官方合作的服务" },
   { kind: "vendor", label: "供应商", note: "模型厂商的 API" },
   { kind: "relay", label: "中转", note: "一个密钥，多家模型" },
   { kind: "local", label: "本机", note: "跑在这台机器上的服务" },
@@ -446,7 +445,7 @@ export function metaFromUpstreamModels(upstream) {
  * "检测协议": probe a base URL to learn which API shapes it answers.
  *
  * A vendor that validates the model name answers 404 to a made-up probe model
- * (magpie's own gateway does), so a 404 carrying a JSON error body still
+ * (some gateways do), so a 404 carrying a JSON error body still
  * counts as "this API is here"; an HTML 404 from a wrong host does not. The
  * models list is used as a second opinion.
  */
