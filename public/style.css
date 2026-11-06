@@ -245,3 +245,22 @@ td.ai-col button { padding: .15rem .5rem; font-size: .78rem; }
 th.ai-col, td.ai-col { position: sticky; right: 0; z-index: 2; background: Canvas; box-shadow: -1px 0 0 var(--line); }
 th.ai-col { z-index: 3; }
 tbody tr:hover td.ai-col { background: color-mix(in srgb, Canvas 92%, CanvasText); }
+
+/* 预设卡片：名称与说明各占一行，过长省略（此前会挤在一起） */
+.preset-card .pname, .preset-card .pnote { display: block; max-width: 100%; }
+
+/* ===== 模型能力表（上下文 / 最大输出 / 思考 / 图片） ===== */
+.meta-table { display: flex; flex-direction: column; gap: .25rem; margin-top: .4rem; }
+.meta-row {
+  display: grid; gap: .4rem; align-items: center; font-size: .78rem;
+  grid-template-columns: minmax(110px, 1.6fr) 92px 92px 58px 58px 74px;
+}
+.meta-row.meta-head { font-size: .7rem; opacity: .6; }
+.meta-row .mid { font-family: ui-monospace, Consolas, monospace; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.meta-row input[type="number"] { width: 100%; padding: .18rem .35rem; font-size: .78rem; }
+.meta-row label { display: inline-flex; align-items: center; gap: .25rem; opacity: .9; white-space: nowrap; }
+.meta-table .empty { opacity: .6; font-size: .78rem; }
+.src-badge { font-size: .66rem; padding: .05rem .3rem; border-radius: 4px; background: #8882; white-space: nowrap; }
+.src-badge.upstream { background: #10b98126; color: #10b981; }
+.src-badge.manual { background: #f59e0b26; color: #d97706; }
+.src-badge.models\.dev { background: #3b82f626; color: #3b82f6; }

@@ -211,6 +211,18 @@ export async function complete(provider, opts) {
 const DEFAULT_TRANSCRIPT_CHARS = 160_000;
 
 /**
+ * How many transcript characters to feed the model, from its own context
+ * window when the provider's model metadata says so (~3 chars/token, 60% of
+ * the window), else a safe default.
+ */
+export function contextBudget(provider, model, fallback = DEFAULT_TRANSCRIPT_CHARS) {
+  const m = provider && provider.modelMeta && provider.modelMeta[model];
+  const ctx = m && Number(m.context);
+  if (!ctx || !Number.isFinite(ctx)) return fallback;
+  return Math.max(20_000, Math.min(600_000, Math.floor(ctx * 3 * 0.6)));
+}
+
+/**
  * Render a session's turns as a plain transcript for the model, trimming to
  * a character budget (head and tail are kept, the middle is elided).
  */
@@ -350,7 +362,7 @@ const QA_SYSTEM = `你是一名软件工程助手。用户会就一批 AI 编码
  * @returns {AsyncGenerator<string>}
  */
 export async function* summarizeSession(provider, model, meta, { lang = "zh", maxChars } = {}) {
-  const { text } = await loadTranscript(meta, { maxChars });
+  const { text } = await loadTranscript(meta, { maxChars: maxChars || contextBudget(provider, model) });
   const system = `${SINGLE_SYSTEM}\n${langNote(lang)}`;
   yield* chatStream(provider, {
     model,
@@ -368,13 +380,15 @@ export async function* summarizeSession(provider, model, meta, { lang = "zh", ma
  *   {type:'final', text}
  *   {type:'error', message, id?}
  */
-export async function* summarizeBatch(provider, model, sessions, { lang = "zh", range, maxChars = 20_000, concurrency = 3 } = {}) {
+export async function* summarizeBatch(provider, model, sessions, { lang = "zh", range, maxChars, concurrency = 3 } = {}) {
   const total = sessions.length;
   const items = [];
   let done = 0;
+  const perSessionChars =
+    maxChars || Math.max(8_000, Math.min(40_000, Math.floor(contextBudget(provider, model) * 0.25)));
 
   async function one(meta) {
-    const { text } = await loadTranscript(meta, { maxChars });
+    const { text } = await loadTranscript(meta, { maxChars: perSessionChars });
     let summary = "";
     for await (const d of chatStream(provider, {
       model,
@@ -455,7 +469,8 @@ function keywords(q) {
  * by keyword, then stream a grounded answer.
  * @returns {AsyncGenerator<{type,text?}>}
  */
-export async function* askSessions(provider, model, sessions, question, { history = [], lang = "zh", budget = 120_000, topK = 8 } = {}) {
+export async function* askSessions(provider, model, sessions, question, { history = [], lang = "zh", budget, topK = 8 } = {}) {
+  const cap = budget || contextBudget(provider, model);
   const words = keywords(question);
   // cheap metadata score first
   const scored = sessions.map((s) => {
@@ -467,14 +482,14 @@ export async function* askSessions(provider, model, sessions, question, { histor
   scored.sort((a, b) => b.score - a.score || (b.meta.lastActivity || 0) - (a.meta.lastActivity || 0));
   const shortlist = scored.slice(0, Math.max(topK, 12));
 
-  // deep score with transcripts, filling a character budget
+  // deep score with transcripts, filling a character cap
   const picked = [];
   let used = 0;
   for (const { meta } of shortlist) {
-    if (picked.length >= topK || used >= budget) break;
+    if (picked.length >= topK || used >= cap) break;
     let text;
     try {
-      text = (await loadTranscript(meta, { maxChars: Math.min(30_000, budget) })).text;
+      text = (await loadTranscript(meta, { maxChars: Math.min(30_000, cap) })).text;
     } catch {
       continue;
     }
@@ -482,7 +497,7 @@ export async function* askSessions(provider, model, sessions, question, { histor
     let score = 0;
     for (const w of words) score += low.split(w).length - 1;
     if (score === 0 && picked.length >= 3) continue;
-    const room = budget - used;
+    const room = cap - used;
     const slice = text.length > room ? text.slice(0, room) : text;
     picked.push({ meta, text: slice, score });
     used += slice.length;
@@ -491,7 +506,7 @@ export async function* askSessions(provider, model, sessions, question, { histor
     // nothing matched: fall back to the most recent few
     for (const { meta } of scored.slice(0, 3)) {
       try {
-        const text = (await loadTranscript(meta, { maxChars: Math.floor(budget / 3) })).text;
+        const text = (await loadTranscript(meta, { maxChars: Math.floor(cap / 3) })).text;
         picked.push({ meta, text, score: 0 });
       } catch {
         /* ignore */

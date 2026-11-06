@@ -54,11 +54,17 @@ node bin/agent-session-recap.mjs web
   自己填任意兼容的 URL。
 - **接口类型**：`OpenAI 兼容` / `OpenAI Responses` / `Anthropic 兼容` / `Gemini 兼容` / `System One`，
   一个供应商可以同时勾选多种，本工具会用最先可用的那种调用。
-- **检测协议**：探测某个 Base URL 到底支持哪些协议，并显示每个协议的结果。
+- **检测协议**：探测某个 Base URL 到底支持哪些协议，并显示每个协议的结果。会区分「协议不存在」与
+  「接口存在但不认这个模型名」（magpie 网关对未知模型就是 404）。
+- **测试连接**：拿当前表单里的地址/密钥/模型真实发一次最小请求，报告成功与否、耗时与错误原文。
 - **API 密钥**：点「显示」可查看；保存在 `~/.config/agent-session-recap/providers.json`（权限 600），
   **从不读取 shell 环境变量里的密钥**。
 - **图标**：可用内置图标 ID（自动生成彩色字母徽标），也可以「选择图片…」上传一张小图。
 - **模型**：「获取模型」会向供应商要模型列表，点选要用的；也可以直接手填模型 ID。
+- **模型能力**：每个模型都可设置 **上下文 / 最大输出 / 是否支持思考 / 是否支持图片**。
+  「从上游获取模型能力」会读供应商自己的 `/models`（OpenRouter 风格字段）与 [models.dev](https://models.dev)
+  目录（缓存一天），并把结果存进 `providers.json`；也可以手动改，改过的条目标为 `manual`。
+  上下文窗口会用于决定送多少会话内容给模型（约 3 字/token、取窗口的 60%）。
 - **高级**：自定义请求头、上下文上限。
 - 列表里可以逐个开关（`off`）、编辑、删除；被关掉的供应商不会出现在 AI 模型选择器里。
 
@@ -138,8 +144,8 @@ node bin/agent-session-recap.mjs web [--port 8651] [--host 127.0.0.1] [--open]
   并可直接「选择目录…」调用本机原生文件夹选择对话框（Windows 用 PowerShell 弹出）。
 
 接口：`GET /api/config`、`GET /api/sessions`、`POST /api/export`、`POST /api/pick-dir`；
-供应商：`GET/POST /api/providers`、`PATCH/DELETE /api/providers/<id>`、`POST /api/providers/models`、
-`POST /api/providers/test`、`POST /api/prefs`；
+供应商：`GET/POST /api/providers`、`PATCH/DELETE /api/providers/<id>`、`POST /api/providers/models`（列表 + 模型能力）、
+`POST /api/providers/test`（检测协议）、`POST /api/providers/check`（测试连接）、`POST /api/prefs`；
 AI（SSE）：`POST /api/ai/summarize`、`POST /api/ai/summarize-batch`、`POST /api/ai/chat`。
 
 ### `export`
@@ -181,6 +187,7 @@ agent-session-recap/
 │  ├─ export.mjs         JSONL 复制 / Markdown / HTML
 │  ├─ providers.mjs      AI 供应商存储与管理（magpie 兼容 schema）
 │  ├─ presets.json       供应商预设目录（由 scripts/gen-presets.mjs 生成）
+│  ├─ modelinfo.mjs      模型能力：上游 /models + models.dev 目录（缓存）
 │  ├─ ai.mjs             AI 客户端（OpenAI / Responses / Anthropic / Gemini）+ 总结/摘要/提问
 │  ├─ server.mjs         轻量 http + JSON 接口 + SSE
 │  └─ cli.mjs            参数解析与命令分发

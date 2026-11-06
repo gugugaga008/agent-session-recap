@@ -63,3 +63,11 @@ export function getDefaultExportDir(now = new Date()) {
 export function getCacheDir() {
   return path.join(os.homedir(), ".agent-session-recap");
 }
+
+/** Config dir for this tool's own files: `ASR_CONFIG_DIR`, else XDG, else ~/.config. */
+export function getConfigDir() {
+  if (process.env.ASR_CONFIG_DIR) return path.resolve(process.env.ASR_CONFIG_DIR);
+  const xdg = process.env.XDG_CONFIG_HOME;
+  if (xdg) return path.join(path.resolve(xdg), "agent-session-recap");
+  return path.join(os.homedir(), ".config", "agent-session-recap");
+}

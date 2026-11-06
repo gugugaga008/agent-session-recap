@@ -10,9 +10,10 @@
 // what you add here is what is used.
 import fs from "node:fs";
 import fsp from "node:fs/promises";
-import os from "node:os";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
+import { getConfigDir } from "./paths.mjs";
+import { metaFromUpstreamModel } from "./modelinfo.mjs";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const PRESETS_FILE = path.join(__dirname, "presets.json");
@@ -28,12 +29,7 @@ export const API_KINDS = [
 
 // ---------------------------------------------------------------- config
 
-export function getConfigDir() {
-  if (process.env.ASR_CONFIG_DIR) return path.resolve(process.env.ASR_CONFIG_DIR);
-  const xdg = process.env.XDG_CONFIG_HOME;
-  if (xdg) return path.join(path.resolve(xdg), "agent-session-recap");
-  return path.join(os.homedir(), ".config", "agent-session-recap");
-}
+export { getConfigDir };
 
 export function providersPath() {
   return path.join(getConfigDir(), "providers.json");
@@ -154,6 +150,7 @@ function publicProvider(p) {
     decide: p.decide || "",
     models: Array.isArray(p.models) ? p.models : [],
     pickedFrom: Array.isArray(p.pickedFrom) ? p.pickedFrom : [],
+    modelMeta: p.modelMeta && typeof p.modelMeta === "object" ? p.modelMeta : {},
     catalog: p.catalog || "",
     website: p.website || "",
     keysUrl: p.keysUrl || "",
@@ -226,6 +223,7 @@ function fromPreset(preset, { key, models, region, id, name }) {
     regionLabel,
     models: Array.isArray(models) ? models : [],
     pickedFrom: Array.isArray(picked) ? picked : [],
+    modelMeta: input.modelMeta && typeof input.modelMeta === "object" ? input.modelMeta : {},
     noKey: !!preset.noKey,
     off: false,
   };
@@ -249,6 +247,7 @@ function fromCustom(input) {
     keysUrl: input.keysUrl || "",
     models: Array.isArray(input.models) ? input.models : [],
     pickedFrom: [],
+    modelMeta: input.modelMeta && typeof input.modelMeta === "object" ? input.modelMeta : {},
     noKey: !!input.noKey,
     headers: input.headers && typeof input.headers === "object" ? input.headers : {},
     off: false,
@@ -288,8 +287,8 @@ export async function updateProvider(id, patch) {
   if (!p) throw new Error(`未找到供应商 "${id}"`);
   const allowed = [
     "name", "icon", "iconUrl", "key", "chat", "responses", "anthropic", "gemini", "decide",
-    "catalog", "website", "keysUrl", "models", "pickedFrom", "off", "noModels", "noKey", "headers", "region",
-    "contextLimit",
+    "catalog", "website", "keysUrl", "models", "pickedFrom", "modelMeta", "off", "noModels", "noKey",
+    "headers", "region", "contextLimit",
   ];
   for (const k of allowed) {
     if (patch[k] !== undefined) p[k] = patch[k];
@@ -376,17 +375,21 @@ async function reqJson(url, { method = "GET", headers = {}, body, timeout = 2000
 /** GET /models in whatever shape the endpoint serves. */
 export async function fetchModels(p) {
   const found = [];
+  const upstream = {};
   const errors = [];
+  const add = (id, raw) => {
+    const s = String(id);
+    if (!s) return;
+    found.push(s);
+    if (raw && typeof raw === "object") upstream[s] = raw;
+  };
   const tryOpenAI = async (base) => {
     if (!base) return;
     const url = joinUrl(base, "/models");
     const r = await reqJson(url, { headers: headersFor(p, "chat") });
     if (r.ok && r.json) {
       const list = r.json.data || r.json.models || [];
-      for (const m of list) {
-        const id = m.id || m.name || m.model;
-        if (id) found.push(String(id));
-      }
+      for (const m of list) add(m.id || m.name || m.model, m);
     } else {
       errors.push(`${url}: HTTP ${r.status}`);
     }
@@ -396,7 +399,7 @@ export async function fetchModels(p) {
     const url = joinUrl(p.anthropic, "/v1/models");
     const r = await reqJson(url, { headers: headersFor(p, "anthropic") });
     if (r.ok && r.json) {
-      for (const m of r.json.data || []) if (m.id) found.push(String(m.id));
+      for (const m of r.json.data || []) add(m.id || m.name, m);
     } else {
       errors.push(`${url}: HTTP ${r.status}`);
     }
@@ -406,10 +409,7 @@ export async function fetchModels(p) {
     const url = joinUrl(p.gemini, "/models");
     const r = await reqJson(url, { headers: headersFor(p, "gemini") });
     if (r.ok && r.json) {
-      for (const m of r.json.models || []) {
-        const n = String(m.name || "").replace(/^models\//, "");
-        if (n) found.push(n);
-      }
+      for (const m of r.json.models || []) add(String(m.name || "").replace(/^models\//, ""), m);
     } else {
       errors.push(`${url}: HTTP ${r.status}`);
     }
@@ -429,55 +429,83 @@ export async function fetchModels(p) {
       /* ignore */
     }
   }
-  return { models, errors };
+  return { models, upstream, errors, meta: metaFromUpstreamModels(upstream) };
+}
+
+/** Upstream /models entries → `{ modelId: meta }`, dropping the empty ones. */
+export function metaFromUpstreamModels(upstream) {
+  const out = {};
+  for (const [id, raw] of Object.entries(upstream || {})) {
+    const m = metaFromUpstreamModel(raw);
+    if (m) out[id] = m;
+  }
+  return out;
 }
 
 /**
- * "检测协议": probe a base URL to learn which API shapes it answers, the way
- * magpie's editor does. `kind` narrows the probe; without it every shape is
- * tried.
+ * "检测协议": probe a base URL to learn which API shapes it answers.
+ *
+ * A vendor that validates the model name answers 404 to a made-up probe model
+ * (magpie's own gateway does), so a 404 carrying a JSON error body still
+ * counts as "this API is here"; an HTML 404 from a wrong host does not. The
+ * models list is used as a second opinion.
  */
-export async function detectProtocol({ baseUrl, key, kind }) {
+export async function detectProtocol({ baseUrl, key, kind, model }) {
   const base = String(baseUrl || "").replace(/\/+$/, "");
   if (!base) throw new Error("请先填写 Base URL");
-  const probe = {
-    chat: { url: joinUrl(base, "/chat/completions"), kind: "chat" },
-    responses: { url: joinUrl(base, "/responses"), kind: "responses" },
-    anthropic: { url: joinUrl(base, "/v1/messages"), kind: "anthropic" },
-    gemini: { url: joinUrl(base, "/models"), kind: "gemini" },
-  };
-  const fake = key || "";
-  const p = { key: fake };
+  const p = { key: key || "" };
+  const probeModel = model || "__probe__";
   const body = {
-    chat: { model: "__probe__", max_tokens: 1, messages: [{ role: "user", content: "ping" }] },
-    responses: { model: "__probe__", input: "ping", max_output_tokens: 1 },
-    anthropic: { model: "__probe__", max_tokens: 1, messages: [{ role: "user", content: "ping" }] },
+    chat: { model: probeModel, max_tokens: 1, messages: [{ role: "user", content: "ping" }] },
+    responses: { model: probeModel, input: "ping", max_output_tokens: 1 },
+    anthropic: { model: probeModel, max_tokens: 1, messages: [{ role: "user", content: "ping" }] },
   };
-  const results = [];
+  const pathFor = { chat: "/chat/completions", responses: "/responses", anthropic: "/v1/messages" };
+  const listFor = { chat: "/models", responses: "/models", anthropic: "/v1/models", gemini: "/models" };
   const kinds = kind ? [kind] : ["chat", "responses", "anthropic", "gemini"];
+  const results = [];
   for (const k of kinds) {
-    const t = probe[k];
-    if (!t) continue;
-    const headers = headersFor(p, t.kind);
-    if (t.kind === "gemini") {
-      const r = await reqJson(t.url, { headers, timeout: 12000 });
-      results.push({ kind: k, ok: r.ok || r.status === 401 || r.status === 403, status: r.status, note: describe(r) });
+    if (k === "gemini") {
+      const r = await reqJson(joinUrl(base, "/models"), { headers: headersFor(p, "gemini"), timeout: 12000 });
+      results.push(verdict(k, r));
       continue;
     }
-    const r = await reqJson(t.url, { method: "POST", headers, body: body[k], timeout: 12000 });
-    // 400/401/422 mean "the endpoint is there, my request was not good
-    // enough" — that is a hit. 404/405 mean it is not this API.
-    const hit = r.status !== 404 && r.status !== 405 && r.status !== 0 && r.status < 500;
-    results.push({ kind: k, ok: hit, status: r.status, note: describe(r) });
+    const r = await reqJson(joinUrl(base, pathFor[k]), {
+      method: "POST",
+      headers: headersFor(p, k),
+      body: body[k],
+      timeout: 15000,
+    });
+    const v = verdict(k, r);
+    if (!v.ok) {
+      const lr = await reqJson(joinUrl(base, listFor[k]), { headers: headersFor(p, k), timeout: 10000 });
+      if (listOk(lr)) {
+        v.ok = true;
+        v.note = "接口存在（模型列表可读）";
+      }
+    }
+    results.push(v);
   }
   return { baseUrl: base, results };
 }
 
-function describe(r) {
-  if (r.status === 0) return "无法连接";
-  if (r.ok) return "可用";
-  if (r.status === 401 || r.status === 403) return "接口存在，密钥未通过";
-  if (r.status === 404 || r.status === 405) return "该协议不存在";
-  const msg = r.json && (r.json.error?.message || r.json.message || r.json.error);
-  return `HTTP ${r.status}${msg ? " · " + String(msg).slice(0, 120) : ""}`;
+function listOk(r) {
+  return r.status !== 0 && r.status < 500 && r.status !== 404 && r.status !== 405;
+}
+
+function verdict(kind, r) {
+  const jsonError = !!(r.json && typeof r.json === "object" && (r.json.error || r.json.message));
+  const notFound = r.status === 404 || r.status === 405;
+  const ok = r.status !== 0 && r.status < 500 && (!notFound || jsonError);
+  let note;
+  if (r.status === 0) note = "无法连接";
+  else if (r.ok && !jsonError) note = "可用";
+  else if (r.status === 401 || r.status === 403) note = "接口存在，密钥未通过";
+  else if (notFound) note = jsonError ? "接口存在，但不认这个模型名" : "该协议不存在";
+  else if (r.status === 429) note = "接口存在，被限流";
+  else {
+    const msg = r.json && (r.json.error?.message || r.json.message || r.json.error);
+    note = `HTTP ${r.status}${msg ? " · " + String(msg).slice(0, 140) : ""}`;
+  }
+  return { kind, ok, status: r.status, note };
 }

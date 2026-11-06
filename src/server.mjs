@@ -25,7 +25,8 @@ import {
   savePrefs,
   updateProvider,
 } from "./providers.mjs";
-import { askSessions, summarizeBatch, summarizeSession } from "./ai.mjs";
+import { askSessions, complete, summarizeBatch, summarizeSession } from "./ai.mjs";
+import { enrichModels } from "./modelinfo.mjs";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const PUBLIC_DIR = path.join(__dirname, "..", "public");
@@ -97,12 +98,19 @@ async function serveStatic(res, urlPath) {
 
 function readBody(req) {
   return new Promise((resolve, reject) => {
-    let data = "";
+    const chunks = [];
+    let size = 0;
     req.on("data", (c) => {
-      data += c;
-      if (data.length > 20_000_000) reject(new Error("请求体过大"));
+      size += c.length;
+      if (size > 20_000_000) {
+        reject(new Error("请求体过大"));
+        req.destroy();
+        return;
+      }
+      chunks.push(c);
     });
-    req.on("end", () => resolve(data));
+    // decode once, so a multi-byte character split across chunks is not mangled
+    req.on("end", () => resolve(Buffer.concat(chunks).toString("utf8")));
     req.on("error", reject);
   });
 }
@@ -178,6 +186,17 @@ function openSse(res) {
       res.end();
     },
   };
+}
+
+/**
+ * A provider for an ad-hoc call: the form's own endpoints/key when it sent
+ * any (so a test uses exactly what is on screen), else the saved one by id.
+ * The id is kept so results can still be saved back.
+ */
+function providerFromBody(body) {
+  const hasConn = !!(body.chat || body.responses || body.anthropic || body.gemini);
+  if (hasConn) return { ...body, id: body.id || "__adhoc__" };
+  return body.id ? getProvider(body.id) : null;
 }
 
 export function createServer(opts = {}) {
@@ -285,10 +304,64 @@ export function createServer(opts = {}) {
 
       if (req.method === "POST" && p === "/api/providers/models") {
         const body = await readJsonBody(req);
-        const provider = body.id ? getProvider(body.id) : { ...body, id: "__adhoc__" };
+        const provider = providerFromBody(body);
         if (!provider) return sendJson(res, 404, { error: "未找到供应商" });
-        const result = await fetchModels(provider);
-        return sendJson(res, 200, result);
+        const wanted = Array.isArray(body.models) && body.models.length ? body.models : null;
+        let models = wanted || [];
+        let upstream = {};
+        let errors = [];
+        if (!wanted || body.refresh) {
+          const r = await fetchModels(provider);
+          models = wanted ? [...new Set([...wanted, ...r.models])] : r.models;
+          upstream = r.upstream || {};
+          errors = r.errors || [];
+        }
+        const existing = (provider.modelMeta && typeof provider.modelMeta === "object" && provider.modelMeta) || {};
+        const { meta, catalog } = await enrichModels(provider, models, {
+          upstream,
+          force: !!body.force,
+          existing,
+        });
+        if (provider.id && provider.id !== "__adhoc__" && Object.keys(meta).length) {
+          try {
+            await updateProvider(provider.id, { modelMeta: { ...existing, ...meta } });
+          } catch {
+            /* ignore */
+          }
+        }
+        return sendJson(res, 200, { models, meta, catalog, errors });
+      }
+
+      // 测试连接：真发一次最小请求，报告耗时与结果
+      if (req.method === "POST" && p === "/api/providers/check") {
+        const body = await readJsonBody(req);
+        const provider = providerFromBody(body);
+        if (!provider) return sendJson(res, 404, { error: "未找到供应商" });
+        const model = String(body.model || "").trim() || (provider.models && provider.models[0]) || "";
+        if (!model) return sendJson(res, 200, { ok: false, error: "请先填写或选择一个模型" });
+        const started = Date.now();
+        try {
+          const reply = await complete(provider, {
+            model,
+            messages: [{ role: "user", content: body.prompt || "Say OK." }],
+            maxTokens: 16,
+            temperature: 0,
+            stream: false,
+          });
+          return sendJson(res, 200, {
+            ok: true,
+            model,
+            latencyMs: Date.now() - started,
+            reply: String(reply || "").slice(0, 500),
+          });
+        } catch (e) {
+          return sendJson(res, 200, {
+            ok: false,
+            model,
+            latencyMs: Date.now() - started,
+            error: String((e && e.message) || e),
+          });
+        }
       }
 
       if (req.method === "POST" && p === "/api/providers/test") {

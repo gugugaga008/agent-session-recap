@@ -503,7 +503,7 @@ function renderAiModels() {
   for (const m of models) {
     const o = document.createElement("option");
     o.value = m;
-    o.textContent = m;
+    o.textContent = modelLabel(p, m);
     msel.appendChild(o);
   }
   if (prefs.defaultModel && models.includes(prefs.defaultModel)) msel.value = prefs.defaultModel;
@@ -686,6 +686,7 @@ function openProviderForm({ preset, provider, custom }) {
     keysUrl: "",
     headers: {},
     contextLimit: 0,
+    modelMeta: {},
     noKey: false,
     _preset: preset || null,
   };
@@ -705,6 +706,7 @@ function openProviderForm({ preset, provider, custom }) {
     f.keysUrl = p.keysUrl || "";
     f.headers = { ...(p.headers || {}) };
     f.contextLimit = p.contextLimit || 0;
+    f.modelMeta = { ...(p.modelMeta || {}) };
     f.noKey = !!p.noKey;
     f.region = p.region || null;
     const pr = presets.find((x) => x.id === f.presetId);
@@ -790,7 +792,7 @@ function renderProviderForm() {
     <div class="field"><label>接口类型</label><div class="chips" id="pfKinds">${kindChips}</div>
       <span class="hint">接口支持几种就选几种；本工具会用最先可用的那种。</span></div>
     ${urlFields}
-    <div class="row"><button type="button" id="pfDetect">检测协议</button><span id="pfDetectResult" class="detect-result"></span></div>
+    <div class="row"><button type="button" id="pfDetect">检测协议</button><button type="button" id="pfCheck">测试连接</button><span id="pfDetectResult" class="detect-result"></span></div>
     <div class="field"><label>API 密钥</label>
       <div class="row"><input type="password" id="pfKey" value="${esc(f.key)}" placeholder="${f.noKey ? "可留空" : "粘贴 API 密钥"}" style="flex:1"><button type="button" id="pfShowKey">显示</button></div>
       <span class="hint">保存在 ${esc(CONFIG_HINT)}，仅你本人可读。不读取 shell 里的任何内容。</span></div>
@@ -808,6 +810,9 @@ function renderProviderForm() {
       <div class="row"><input type="text" id="pfModels" value="${esc(f.models.join(", "))}" placeholder="模型 ID，逗号分隔，例如 gpt-5.5, claude-sonnet-5" style="flex:1"><button type="button" id="pfFetch">获取模型</button></div>
       <span class="hint" id="pfFetchHint">可选：用「获取模型」从供应商列表中勾选，或直接填写模型 ID。</span>
       <div class="model-box" id="pfPills">${pills}</div></div>
+    <div class="field"><label>模型能力 <span class="hint">上下文 / 最大输出 / 是否支持思考 / 是否支持图片</span></label>
+      <div class="row"><button type="button" id="pfMetaFetch">从上游获取模型能力</button><span class="hint" id="pfMetaHint">会读供应商的 /models 与 models.dev；也可手动填写。</span></div>
+      <div class="meta-table" id="pfMetaTable"></div></div>
     <details class="adv"><summary>高级</summary><div class="adv-body">
       <div class="field"><label>请求头（每行 Key: Value）</label><textarea id="pfHeaders" rows="3" placeholder="X-Foo: bar">${esc(headerText)}</textarea></div>
       <div class="field"><label>上下文上限（tokens，可选）</label><input type="text" id="pfCtx" value="${f.contextLimit || ""}"></div>
@@ -851,13 +856,35 @@ function renderProviderForm() {
       const r = await apiJson("/api/providers/test", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ baseUrl: base, key: f.key, kind }),
+        body: JSON.stringify({ baseUrl: base, key: f.key, kind, model: f.models[0] }),
       });
       el.innerHTML = r.results
         .map((x) => `<span class="${x.ok ? "ok" : "no"}">${x.ok ? "✓" : "✗"} ${esc(x.kind)} · ${esc(x.note)}</span>`)
         .join("");
     } catch (e) {
       el.innerHTML = `<span class="no">检测失败：${esc(e.message)}</span>`;
+    }
+  });
+  $("pfCheck").addEventListener("click", async () => {
+    const el = $("pfDetectResult");
+    const model = f.models[0] || ($("pfModels").value.split(",")[0] || "").trim();
+    if (!model) {
+      el.innerHTML = '<span class="no">先填一个模型 ID 再测试</span>';
+      return;
+    }
+    el.innerHTML = '<span class="no">测试中（真实发送一次请求）…</span>';
+    try {
+      const cfg = providerConfigForCall(f);
+      const r = await apiJson("/api/providers/check", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ ...cfg, model }),
+      });
+      el.innerHTML = r.ok
+        ? `<span class="ok">✓ 连接成功 · ${esc(r.model)} · ${r.latencyMs}ms · 回复：${esc((r.reply || "").slice(0, 60))}</span>`
+        : `<span class="no">✗ 失败（${r.latencyMs || 0}ms）：${esc(r.error || "未知错误")}</span>`;
+    } catch (e) {
+      el.innerHTML = `<span class="no">测试失败：${esc(e.message)}</span>`;
     }
   });
   $("pfShowKey").addEventListener("click", () => {
@@ -896,6 +923,7 @@ function renderProviderForm() {
       .map((s) => s.trim())
       .filter(Boolean);
   });
+  $("pfModels").addEventListener("change", () => renderModelMeta());
   $("pfFetch").addEventListener("click", async () => {
     const hint = $("pfFetchHint");
     hint.textContent = "正在获取模型…";
@@ -917,6 +945,7 @@ function renderProviderForm() {
       });
       if (r.models && r.models.length) {
         f.pickedFrom = r.models.slice();
+        if (r.meta) f.modelMeta = { ...f.modelMeta, ...r.meta };
         hint.textContent = `获取到 ${r.models.length} 个模型，点选要用的。`;
         renderProviderForm();
       } else {
@@ -927,11 +956,38 @@ function renderProviderForm() {
       hint.textContent = "获取失败：" + e.message;
     }
   });
+  $("pfMetaFetch").addEventListener("click", async () => {
+    const hint = $("pfMetaHint");
+    if (!f.models.length) {
+      hint.textContent = "先在上面选择或填写模型 ID。";
+      return;
+    }
+    hint.textContent = "正在获取…";
+    try {
+      const r = await apiJson("/api/providers/models", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ ...providerConfigForCall(f), models: f.models, refresh: true }),
+      });
+      if (r.meta) f.modelMeta = { ...f.modelMeta, ...r.meta };
+      renderModelMeta();
+      const n = Object.keys(r.meta || {}).length;
+      const bits = [];
+      if (r.catalog && r.catalog.fetchedAt) bits.push(`models.dev ${r.catalog.fromCache ? "（缓存）" : "（已更新）"}`);
+      else if (r.catalog && r.catalog.error) bits.push("models.dev 不可用：" + r.catalog.error);
+      hint.textContent = `已获取 ${n} 个模型的能力` + (bits.length ? " · " + bits.join(" · ") : "");
+    } catch (e) {
+      hint.textContent = "获取失败：" + e.message;
+    }
+  });
   box.querySelectorAll("#pfPills .model-pill").forEach((pill) =>
     pill.addEventListener("click", () => {
       const m = pill.dataset.model;
       if (f.models.includes(m)) f.models = f.models.filter((x) => x !== m);
-      else f.models.push(m);
+      else {
+        f.models.push(m);
+        f.modelMeta[m] = f.modelMeta[m] || {};
+      }
       renderProviderForm();
     }),
   );
@@ -945,6 +1001,80 @@ function renderProviderForm() {
   });
   $("pfCtx").addEventListener("input", (e) => {
     f.contextLimit = Number(e.target.value) || 0;
+  });
+  renderModelMeta();
+}
+
+function providerConfigForCall(f) {
+  return {
+    id: f.id || undefined,
+    chat: f.kinds.has("chat") ? f.urls.chat.trim() : "",
+    responses: f.kinds.has("responses") ? f.urls.responses.trim() : "",
+    anthropic: f.kinds.has("anthropic") ? f.urls.anthropic.trim() : "",
+    gemini: f.kinds.has("gemini") ? f.urls.gemini.trim() : "",
+    key: f.key,
+    headers: f.headers || {},
+    catalog: f.catalog || "",
+  };
+}
+
+function fmtCtx(n) {
+  const v = Number(n);
+  if (!v) return "";
+  return v >= 1000 ? `${Math.round(v / 1000)}k` : String(v);
+}
+
+function modelLabel(p, m) {
+  const meta = p && p.modelMeta && p.modelMeta[m];
+  const c = meta && fmtCtx(meta.context);
+  return c ? `${m} · ${c}` : m;
+}
+
+/** 模型能力表：上下文 / 最大输出 / 思考 / 图片，可编辑，来源可溯源。 */
+function renderModelMeta() {
+  const box = $("pfMetaTable");
+  if (!box) return;
+  const f = formState;
+  const models = [...new Set(f.models)];
+  if (!models.length) {
+    box.innerHTML = '<div class="empty">先在上面选择或填写模型，再获取/填写能力。</div>';
+    return;
+  }
+  const rows = models
+    .map((m) => {
+      const meta = f.modelMeta[m] || {};
+      const src = meta.source
+        ? `<span class="src-badge ${esc(meta.source)}">${esc(meta.source)}</span>`
+        : '<span class="src-badge">—</span>';
+      return `<div class="meta-row" data-model="${esc(m)}">
+        <span class="mid" title="${esc(m)}">${esc(m)}</span>
+        <input type="number" min="0" step="1000" data-field="context" value="${meta.context ?? ""}" placeholder="上下文">
+        <input type="number" min="0" step="1000" data-field="maxOutput" value="${meta.maxOutput ?? ""}" placeholder="最大输出">
+        <label><input type="checkbox" data-field="reasoning" ${meta.reasoning ? "checked" : ""}> 思考</label>
+        <label><input type="checkbox" data-field="vision" ${meta.vision ? "checked" : ""}> 图片</label>
+        ${src}
+      </div>`;
+    })
+    .join("");
+  box.innerHTML =
+    '<div class="meta-row meta-head"><span>模型</span><span>上下文</span><span>最大输出</span><span>思考</span><span>图片</span><span>来源</span></div>' +
+    rows;
+  box.querySelectorAll(".meta-row[data-model]").forEach((row) => {
+    const m = row.dataset.model;
+    f.modelMeta[m] = f.modelMeta[m] || {};
+    row.querySelectorAll("[data-field]").forEach((inp) =>
+      inp.addEventListener("change", () => {
+        const field = inp.dataset.field;
+        if (inp.type === "checkbox") f.modelMeta[m][field] = inp.checked;
+        else {
+          const v = Number(inp.value);
+          if (v > 0) f.modelMeta[m][field] = v;
+          else delete f.modelMeta[m][field];
+        }
+        f.modelMeta[m].source = "manual";
+        renderModelMeta();
+      }),
+    );
   });
 }
 
@@ -966,6 +1096,7 @@ function providerPayload(f) {
     keysUrl: f.keysUrl || "",
     headers: f.headers || {},
     contextLimit: Number(f.contextLimit) || 0,
+    modelMeta: f.modelMeta || {},
   };
 }
 
