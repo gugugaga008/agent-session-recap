@@ -1,8 +1,9 @@
-# pi-sessions
+# agent-session-recap
 
-一个用于浏览、按时间段筛选、导出 [pi](https://pi.dev) 会话的 **只读** 工具。
+一个用于浏览、按时间段筛选、导出 AI 编码 agent 会话的 **只读** 工具。
+当前支持 [pi](https://pi.dev) 的会话，后续将扩展支持更多 agent。
 
-它扫描 pi 使用的同一套会话目录，可按选定的时间字段、在 `起始 → 结束` 时间区间内筛选会话，
+它扫描 agent 使用的会话目录，可按选定的时间字段、在 `起始 → 结束` 时间区间内筛选会话，
 记录筛选结果，并把选中的会话导出为 JSONL、Markdown 或 HTML。**源会话永不被修改**——导出只是复制出去。
 
 零依赖、无构建步骤，需要 Node.js 18+。
@@ -11,13 +12,13 @@
 
 ```bash
 # 列出全部会话
-node bin/pi-sessions.mjs list
+node bin/agent-session-recap.mjs list
 
 # 按「最后活动时间」筛选本地时间段
-node bin/pi-sessions.mjs list --field lastActivity --from 2026-11-05 --to 2026-11-06
+node bin/agent-session-recap.mjs list --field lastActivity --from 2026-11-05 --to 2026-11-06
 
 # 启动网页界面（http://127.0.0.1:8651）
-node bin/pi-sessions.mjs web
+node bin/agent-session-recap.mjs web
 ```
 
 ## 会话目录来源
@@ -33,7 +34,7 @@ node bin/pi-sessions.mjs web
 
 ## 时间字段
 
-每个会话暴露四个可选时间字段（表格中全部展示）：
+每个会话暴露四个可选时间字段（表格中全部展示），另有一个「活动时间」用于区间命中：
 
 | 字段 | 含义 |
 |---|---|
@@ -41,6 +42,7 @@ node bin/pi-sessions.mjs web
 | `lastActivity` | **任意类型最后一条记录**的时间（默认） |
 | `lastMessage` | **最后一条消息**的时间 |
 | `mtime` | 文件系统**最后修改**时间 |
+| `activity` | 会话在 `[from, to)` 内**是否有任意一条记录**（区间重叠判定，用于跨天会话） |
 
 会话记录里的时间戳以 UTC 存储；你传入的时间区间按**本地时区**解释。区间为**半开区间** `[from, to)`。
 只给日期时按本地 0 点处理，因此 `--from 2026-11-05 --to 2026-11-06` 正好选中 11 月 5 日这一整天。
@@ -50,7 +52,7 @@ node bin/pi-sessions.mjs web
 ### `list`
 
 ```bash
-node bin/pi-sessions.mjs list [筛选] [--json|--csv] [--save <文件>] [--limit <n>]
+node bin/agent-session-recap.mjs list [筛选] [--json|--csv] [--save <文件>] [--limit <n>]
 ```
 
 输出表格（或 JSON/CSV）。`--save <文件>` 会把筛选结果写入 JSON，供 `export --result` 使用。
@@ -58,7 +60,7 @@ node bin/pi-sessions.mjs list [筛选] [--json|--csv] [--save <文件>] [--limit
 ### `web`
 
 ```bash
-node bin/pi-sessions.mjs web [--port 8651] [--host 127.0.0.1] [--open]
+node bin/agent-session-recap.mjs web [--port 8651] [--host 127.0.0.1] [--open]
 ```
 
 提供一个轻量单页界面 + 少量 JSON 接口，默认只绑定 `127.0.0.1`。页面里可以设置筛选、勾选行、
@@ -81,7 +83,7 @@ node bin/pi-sessions.mjs web [--port 8651] [--host 127.0.0.1] [--open]
 ### `export`
 
 ```bash
-node bin/pi-sessions.mjs export [筛选 | --result <文件>] [--ids a,b] \
+node bin/agent-session-recap.mjs export [筛选 | --result <文件>] [--ids a,b] \
     --format jsonl|md|html --out <目录>
 ```
 
@@ -89,7 +91,7 @@ node bin/pi-sessions.mjs export [筛选 | --result <文件>] [--ids a,b] \
 - `md` —— 每轮输出 **用户** 与 **助手** 文本、**工具名称**，以及 token/耗时（不含思考过程，不含工具参数与结果）。
 - `html` —— 与 Markdown 相同内容，生成独立带样式的网页。
 
-`--out` 默认为「下载」目录下按时间戳新建的子文件夹，例如 `Downloads\pi-sessions-20261106-142530`，
+`--out` 默认为「下载」目录下按时间戳新建的子文件夹，例如 `Downloads\agent-session-recap-20261106-142530`，
 避免导出文件散落在下载目录里。每次导出都会生成一份 `manifest.json` 清单。同名文件不会覆盖（自动追加数字后缀）。
 
 ## 筛选参数
@@ -106,8 +108,8 @@ node bin/pi-sessions.mjs export [筛选 | --result <文件>] [--ids a,b] \
 ## 目录结构
 
 ```
-pi-sessions/
-├─ bin/pi-sessions.mjs   CLI 入口
+agent-session-recap/
+├─ bin/agent-session-recap.mjs   CLI 入口
 ├─ src/
 │  ├─ paths.mjs          sessions 根目录解析（对齐 pi 优先级）
 │  ├─ scanner.mjs        收集 *.jsonl（根 + 一层子目录）

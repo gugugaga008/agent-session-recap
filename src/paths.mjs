@@ -56,10 +56,10 @@ export function getDefaultExportDir(now = new Date()) {
   const ts = `${now.getFullYear()}${p(now.getMonth() + 1)}${p(now.getDate())}-${p(now.getHours())}${p(
     now.getMinutes(),
   )}${p(now.getSeconds())}`;
-  return path.join(getDownloadsDir(), `pi-sessions-${ts}`);
+  return path.join(getDownloadsDir(), `agent-session-recap-${ts}`);
 }
 
 /** Where this tool keeps its own cache (never inside the sessions tree). */
 export function getCacheDir() {
-  return path.join(os.homedir(), ".pi-sessions");
+  return path.join(os.homedir(), ".agent-session-recap");
 }

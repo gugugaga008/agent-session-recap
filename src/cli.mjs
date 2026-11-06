@@ -34,12 +34,12 @@ const OPTIONS = {
 };
 
 function help() {
-  return `pi-sessions — pi 会话只读浏览 / 时间段筛选 / 导出工具
+  return `agent-session-recap — AI 编码 agent 会话只读浏览 / 时间段筛选 / 导出工具
 
 用法：
-  pi-sessions list   [筛选] [--json|--csv] [--save <文件>]
-  pi-sessions web    [--port 8651] [--host 127.0.0.1] [--open]
-  pi-sessions export [筛选 | --result <文件>] [--ids a,b] --format jsonl|md|html --out <目录>
+  agent-session-recap list   [筛选] [--json|--csv] [--save <文件>]
+  agent-session-recap web    [--port 8651] [--host 127.0.0.1] [--open]
+  agent-session-recap export [筛选 | --result <文件>] [--ids a,b] --format jsonl|md|html --out <目录>
 
 筛选：
   --field <名称>        created(创建) | lastActivity(最后活动) | lastMessage(最后消息) | mtime(文件更新) | activity(区间内有活动)   （默认：${DEFAULT_FIELD}）
@@ -171,7 +171,7 @@ async function cmdWeb(values, sessionsDir) {
   const host = values.host || "127.0.0.1";
   const { server, sessionsDir: dir } = await startServer({ port, host, sessionDir: values["session-dir"] });
   const url = `http://${host}:${port}`;
-  process.stdout.write(`pi-sessions 网页界面已启动：${url}\n会话目录：${dir}\n按 Ctrl+C 停止。\n`);
+  process.stdout.write(`agent-session-recap 网页界面已启动：${url}\n会话目录：${dir}\n按 Ctrl+C 停止。\n`);
   if (values.open) openBrowser(url);
   const shutdown = () => server.close(() => process.exit(0));
   process.on("SIGINT", shutdown);

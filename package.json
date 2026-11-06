@@ -1,17 +1,17 @@
 {
-  "name": "pi-sessions",
+  "name": "agent-session-recap",
   "version": "0.1.0",
   "private": true,
-  "description": "Read-only browser, time-filter and exporter for pi coding-agent sessions",
+  "description": "Read-only browser, time-filter and exporter for AI coding-agent sessions",
   "type": "module",
   "license": "MIT",
   "author": "Wukaixong",
   "bin": {
-    "pi-sessions": "bin/pi-sessions.mjs"
+    "agent-session-recap": "bin/agent-session-recap.mjs"
   },
   "scripts": {
-    "list": "node bin/pi-sessions.mjs list",
-    "web": "node bin/pi-sessions.mjs web"
+    "list": "node bin/agent-session-recap.mjs list",
+    "web": "node bin/agent-session-recap.mjs web"
   },
   "engines": {
     "node": ">=18"

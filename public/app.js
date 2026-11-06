@@ -377,7 +377,7 @@ function applyConditions(list) {
 
 // ---- 列宽 ----
 const DEFAULT_COLS = [40, 300, 240, 130, 170, 170, 170, 170, 90, 70];
-const STORAGE_KEY = "pi-sessions-col-widths";
+const STORAGE_KEY = "agent-session-recap-col-widths";
 let colWidths = DEFAULT_COLS.slice();
 
 function loadWidths() {

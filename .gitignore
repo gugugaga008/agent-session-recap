@@ -6,7 +6,7 @@ node_modules/
 *.log
 
 # 导出结果与清单（如误放在项目内）
-pi-sessions-*/
+agent-session-recap-*/
 manifest.json
 
 # 编辑器 / 系统
